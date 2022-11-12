@@ -56,9 +56,12 @@ class CategoryRepository extends BaseRepository
     public function destroy_category($id)
     {
         $category = $this->model->find($id);
+        if ($category == NULL)
+            return false;
+
         $category->delete();
-        if ($category->image)
-            Storage::disk('public')->delete($category->image);
+        /*if ($category->image)
+            Storage::disk('public')->delete($category->image);*/
     }
 
 

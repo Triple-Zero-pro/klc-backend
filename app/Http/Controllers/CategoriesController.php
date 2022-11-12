@@ -30,7 +30,6 @@ class CategoriesController extends Controller
                 ]);
             } else {
                 return response()->json([
-                    'status' => '',
                     'categories' => 0,
                     'message' => 'Not Categories Found',
                 ], 204);
@@ -83,14 +82,11 @@ class CategoriesController extends Controller
     }
 
 
-    public function destroy($id): \Illuminate\Http\JsonResponse
+    public function destroy($id)
     {
         try {
             $category = $this->categoryRepository->destroy_category($id);
-            if ($category)
-                return response()->json(['status' => 'success', 'message' => 'Category Deleted Successfully',]);
-            else
-                return response()->json(['status' => 'error', 'message' => 'Category Not Found'], 204);
+            return response()->json(['status' => 'success', 'message' => 'Category Deleted Successfully']);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
