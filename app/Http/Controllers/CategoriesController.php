@@ -29,9 +29,9 @@ class CategoriesController extends Controller
                 ]);
             } else {
                 return response()->json([
-                    'data' => 0,
+                    'data' => '',
                     'message' => 'Not Categories Found',
-                ], 204);
+                ], 404);
             }
         } catch (Exception $e) {
             return response()->json([
@@ -54,7 +54,7 @@ class CategoriesController extends Controller
             'status' => 'required|in:active,archived',
         ]);
         if ($validator->fails())
-            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 402);
+            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
         $data_request = $request->post();
         try {
@@ -84,7 +84,7 @@ class CategoriesController extends Controller
             'status' => 'required|in:active,archived',
         ]);
         if ($validator->fails())
-            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 402);
+            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
         $data_request = $request->post();
         try {
@@ -113,8 +113,7 @@ class CategoriesController extends Controller
         }
     }
 
-        protected
-        function uploadImage(Request $request)
+        protected function uploadImage(Request $request)
         {
 
             if (!$request->hasFile('image'))

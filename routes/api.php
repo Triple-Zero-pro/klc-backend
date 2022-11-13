@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\ServicesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,5 +29,7 @@ Route::controller(AuthController::class)->group(function () {
 });
 Route::group(['middleware'=>'auth:api'],function (){
     Route::resource('categories',CategoriesController::class);
+    Route::resource('services',ServicesController::class);
+    Route::get('get_services_by_category/{category_id}',[ServicesController::class,'get_services_by_category']);
 });
 
