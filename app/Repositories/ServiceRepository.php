@@ -21,10 +21,9 @@ class ServiceRepository extends BaseRepository
     public function index()
     {
         return $this->model->with(['category' => function ($query) {
-                $query->select('id', 'name');
-            }])->paginate(15);
+            $query->select('id', 'name');
+        }])->paginate(15);
     }
-
 
 
     public function store_service($data_request)
@@ -51,10 +50,11 @@ class ServiceRepository extends BaseRepository
 
         $service->delete();
     }
+
     public function get_services_by_category($category_id)
     {
-        return $this->model->where('category_id',$category_id)
-            ->select('services.image','services.price','services.name',)
+        return $this->model->where('category_id', $category_id)
+            ->select('services.image', 'services.price', 'services.name',)
             ->get();
     }
 

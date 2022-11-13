@@ -120,6 +120,7 @@ class ServicesController extends Controller
             ], 400);
         }
     }
+
     public function get_services_by_category($category_id)
     {
 

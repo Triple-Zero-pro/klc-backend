@@ -113,14 +113,4 @@ class CategoriesController extends Controller
         }
     }
 
-        protected function uploadImage(Request $request)
-        {
-
-            if (!$request->hasFile('image'))
-                return;
-
-            $file = $request->file('image');
-            return $file->store('uploads', 'public');
-
-        }
     }
