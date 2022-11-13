@@ -48,19 +48,19 @@ class CategoriesController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'name' => "required|string|min:3|max:191",
             'image' => 'required',
             'status' => 'required|in:active,archived',
         ]);
-        if($validator->fails())
-            return response()->json(['status' => 'error','message' => 'Error Validation', 'errors' => $validator->errors()],402);
+        if ($validator->fails())
+            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 402);
 
         $data_request = $request->post();
         try {
             $category = $this->categoryRepository->store_category($data_request);
             if ($category)
-                return response()->json(['status' => 'success', 'category' => $category,]);
+                return response()->json(['status' => 'success', 'message' => 'Category Created Successfully','category' => $category]);
 
         } catch (Exception $e) {
             return response()->json([
@@ -76,9 +76,27 @@ class CategoriesController extends Controller
     }
 
 
-    public function update(CategoryRequest $request, $id)
+    public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => "required|string|min:3|max:191",
+            'image' => 'required',
+            'status' => 'required|in:active,archived',
+        ]);
+        if ($validator->fails())
+            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 402);
 
+        $data_request = $request->post();
+        try {
+            $category = $this->categoryRepository->update_category($data_request,$id);
+            if ($category)
+                return response()->json(['status' => 'success','message' => 'Category Updated Successfully', 'category' => $category]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
     }
 
 
@@ -95,14 +113,15 @@ class CategoriesController extends Controller
         }
     }
 
-    protected function uploadImage(Request $request)
-    {
+        protected
+        function uploadImage(Request $request)
+        {
 
-        if (!$request->hasFile('image'))
-            return;
+            if (!$request->hasFile('image'))
+                return;
 
-        $file = $request->file('image');
-        return $file->store('uploads', 'public');
+            $file = $request->file('image');
+            return $file->store('uploads', 'public');
 
+        }
     }
-}

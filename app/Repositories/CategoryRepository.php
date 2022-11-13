@@ -30,25 +30,12 @@ class CategoryRepository extends BaseRepository
 
     }
 
-    public function edit_category($id)
-    {
-        $data = [];
-        $data['category'] = $this->model->findOrFail($id);
-        $data['parents'] = $this->model->where('id', '<>', $id)
-            ->where(function ($query) use ($id) {
-                $query->whereNull('parent_id')
-                    ->orWhere('parent_id', '<>', $id);
-            })
-            ->get();
-
-        return $data;
-
-    }
 
     public function update_category($data_request, $id)
     {
         $category = $this->model->find($id);
-        return $category->update($data_request);
+        $category->update($data_request);
+        return $category;
 
     }
 
@@ -60,8 +47,6 @@ class CategoryRepository extends BaseRepository
             return false;
 
         $category->delete();
-        /*if ($category->image)
-            Storage::disk('public')->delete($category->image);*/
     }
 
 
