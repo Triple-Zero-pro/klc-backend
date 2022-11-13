@@ -23,14 +23,9 @@ class CategoryRequest extends FormRequest
      */
     public function rules()
     {
-        $id = 0;
-
-        if ($this->route('category'))
-            $id = $this->route('category');
-
         return [
-            'name' => "required|string|min:3|max:191|unique:categories,name,$id",
-            'image' => 'image|max:1048576|dimensions:min_height=100,min_width=100',
+            'name' => "required|string|min:3|max:191",
+            'image' => 'image|max:1048576|dimensions:min_height=50,min_width=50',
             'status' => 'required|in:active,archived',
         ];
     }
@@ -38,7 +33,7 @@ class CategoryRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.uniques' => 'This Name Already Exists'
+            'name.required' => 'Category Name Is Required  '
         ];
     }
 }

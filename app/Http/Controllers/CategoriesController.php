@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CategoryRequest as CategoryRequest;
+
 use App\Repositories\CategoryRepository as CategoryRepository;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\Validator;
 
 class CategoriesController extends Controller
 {
@@ -47,20 +46,21 @@ class CategoriesController extends Controller
 
     }
 
-    public function store(CategoryRequest $request)
+    public function store(Request $request)
     {
-        $request->merge(['slug' => Str::slug($request->name)]);
-        $data_request = $request->except('image');
-        $data_request['image'] = $this->uploadImage($request);
+        $validator = Validator::make($request->all(),[
+            'name' => "required|string|min:3|max:191",
+            'image' => 'required',
+            'status' => 'required|in:active,archived',
+        ]);
+        if($validator->fails())
+            return response()->json(['status' => 'error','message' => 'Error Validation', 'errors' => $validator->errors()],402);
+
+        $data_request = $request->post();
         try {
             $category = $this->categoryRepository->store_category($data_request);
             if ($category)
-            {
-                return response()->json([
-                    'status' => 'success',
-                    'category' => $category,
-                ]);
-            }
+                return response()->json(['status' => 'success', 'category' => $category,]);
 
         } catch (Exception $e) {
             return response()->json([
