@@ -25,11 +25,11 @@ class CategoriesController extends Controller
             if (isset($categories) && count($categories) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'categories' => $categories,
+                    'data' => $categories,
                 ]);
             } else {
                 return response()->json([
-                    'categories' => 0,
+                    'data' => 0,
                     'message' => 'Not Categories Found',
                 ], 204);
             }
@@ -60,7 +60,7 @@ class CategoriesController extends Controller
         try {
             $category = $this->categoryRepository->store_category($data_request);
             if ($category)
-                return response()->json(['status' => 'success', 'message' => 'Category Created Successfully','category' => $category]);
+                return response()->json(['status' => 'success', 'message' => 'Category Created Successfully','data' => $category]);
 
         } catch (Exception $e) {
             return response()->json([
@@ -90,7 +90,7 @@ class CategoriesController extends Controller
         try {
             $category = $this->categoryRepository->update_category($data_request,$id);
             if ($category)
-                return response()->json(['status' => 'success','message' => 'Category Updated Successfully', 'category' => $category]);
+                return response()->json(['status' => 'success','message' => 'Category Updated Successfully', 'data' => $category]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
