@@ -68,7 +68,7 @@ class ServicesController extends Controller
             'description' => 'required|min:4',
             'terms_conditions' => 'required|min:4',
             'price' => 'required|between:0,99.99',
-            'status' => 'required|in:active,archived',
+            'status' => 'required|in:active,unactive',
         ]);
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
@@ -95,6 +95,9 @@ class ServicesController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (!$serve_check = $this->serviceRepository->show($id))
+            return response()->json(['status' => 'error', 'message' => 'Service ID Not Found',], 404);
+
         $validator = Validator::make($request->all(), [
             'name' => "required|string|min:3|max:191",
             'category_id' => 'required|int',
@@ -102,7 +105,7 @@ class ServicesController extends Controller
             'description' => 'required|min:4',
             'terms_conditions' => 'required|min:4',
             'price' => 'required|between:0,99.99',
-            'status' => 'required|in:active,archived',
+            'status' => 'required|in:active,unactive',
         ]);
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
@@ -123,7 +126,7 @@ class ServicesController extends Controller
 
     public function destroy($id)
     {
-        if (!$serve_check = Service::find($id))
+        if (!$serve_check = $this->serviceRepository->show($id))
             return response()->json(['status' => 'error', 'message' => 'Service ID Not Found',], 404);
 
         try {

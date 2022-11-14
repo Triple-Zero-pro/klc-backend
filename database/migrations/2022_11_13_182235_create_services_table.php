@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
-            $table->string('name','191');
             $table->string('image','191');
-            $table->text('description');
-            $table->text('terms_conditions');
+            $table->json('name','191');
+            $table->json('description');
+            $table->json('terms_conditions');
             $table->float('price');
             $table->enum('status',['active','unactive'])->default('active');
             $table->timestamps();
