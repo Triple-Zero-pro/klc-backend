@@ -3,6 +3,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Category;
 use Illuminate\Support\Facades\Storage;
 use Prettus\Repository\Eloquent\BaseRepository;
 
@@ -32,7 +33,18 @@ class CategoryRepository extends BaseRepository
 
     public function store_category($data_request)
     {
-        return $this->model->create($data_request);
+        return $this->model->create([
+            'name' => [
+                'en' => $data_request['name'],
+                'ar' => $data_request['name_ar']
+            ],
+            'description' => [
+                'en' => $data_request['description'],
+                'ar' => $data_request['description_ar']
+            ],
+            'image' => $data_request['image'],
+            'status' => $data_request['status'],
+        ]);
 
     }
 
@@ -40,7 +52,18 @@ class CategoryRepository extends BaseRepository
     public function update_category($data_request, $id)
     {
         $category = $this->model->find($id);
-        $category->update($data_request);
+        $category->update([
+            'name' => [
+                'en' => $data_request['name'],
+                'ar' => $data_request['name_ar']
+            ],
+            'description' => [
+                'en' => $data_request['description'],
+                'ar' => $data_request['description_ar']
+            ],
+            'image' => $data_request['image'],
+            'status' => $data_request['status'],
+        ]);
         return $category;
 
     }

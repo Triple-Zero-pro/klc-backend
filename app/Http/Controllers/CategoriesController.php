@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Category;
 use App\Repositories\CategoryRepository as CategoryRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -50,6 +51,7 @@ class CategoriesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => "required|string|min:3|max:191",
+            'name_ar' => "required|string|min:3|max:191",
             'image' => 'required',
             'status' => 'required|in:active,archived',
         ]);
@@ -100,8 +102,12 @@ class CategoriesController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (!$category_check = $this->categoryRepository->show($id))
+            return response()->json(['status' => 'error', 'message' => 'Category ID Not Found',], 404);
+
         $validator = Validator::make($request->all(), [
             'name' => "required|string|min:3|max:191",
+            'name_ar' => "required|string|min:3|max:191",
             'image' => 'required',
             'status' => 'required|in:active,archived',
         ]);
@@ -124,6 +130,8 @@ class CategoriesController extends Controller
 
     public function destroy($id)
     {
+        if (!$category_check = $this->categoryRepository->show($id))
+            return response()->json(['status' => 'error', 'message' => 'Category ID Not Found',], 404);
         try {
             $category = $this->categoryRepository->destroy_category($id);
             return response()->json(['status' => 'success', 'message' => 'Category Deleted Successfully']);
