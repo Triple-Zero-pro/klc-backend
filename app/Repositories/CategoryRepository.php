@@ -23,6 +23,12 @@ class CategoryRepository extends BaseRepository
     }
 
 
+    public function show($id)
+    {
+        return $this->model->find($id);
+    }
+
+
 
     public function store_category($data_request)
     {

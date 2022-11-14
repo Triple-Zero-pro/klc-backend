@@ -74,6 +74,28 @@ class CategoriesController extends Controller
     {
 
     }
+    public function show($category_id): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $category = $this->categoryRepository->show($category_id);
+            if (isset($category)) {
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $category,
+                ]);
+            } else {
+                return response()->json([
+                    'data' => '',
+                    'message' => 'Category ID Not  Found',
+                ], 404);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
 
 
     public function update(Request $request, $id)
