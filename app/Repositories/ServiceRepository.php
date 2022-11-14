@@ -25,6 +25,11 @@ class ServiceRepository extends BaseRepository
         }])->paginate(15);
     }
 
+    public function show($service_id)
+    {
+        return $this->model->find($service_id);
+    }
+
 
     public function store_service($data_request)
     {
