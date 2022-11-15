@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->json('name','191');
-            //$table->string('slug')->unique();
-            $table->json('description')->nullable();
+            $table->string('name_en','191');
+            $table->text('description_en')->nullable();
+            $table->string('name_ar','191');
+            $table->text('description_ar')->nullable();
             $table->text('image')->nullable();
             $table->enum('status',['active','archived'])->default('active');
             $table->timestamps();

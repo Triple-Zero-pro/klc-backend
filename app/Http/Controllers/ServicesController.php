@@ -20,8 +20,9 @@ class ServicesController extends Controller
         $this->serviceRepository = $serviceRepository;
     }
 
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index(Request $request): \Illuminate\Http\JsonResponse
     {
+        app()->setLocale($request->header('lang'));
         try {
             $services = $this->serviceRepository->index();
             if (isset($services) && count($services) > 0)
@@ -41,8 +42,9 @@ class ServicesController extends Controller
     {
 
     }
-    public function show($service_id)
+    public function show(Request $request,$service_id)
     {
+        app()->setLocale($request->header('lang'));
         try {
             $service = $this->serviceRepository->show($service_id);
             if (isset($service))
@@ -62,11 +64,14 @@ class ServicesController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'name' => "required|string|min:3|max:191",
+            'name_en' => "required|string|min:3|max:191",
+            'description_en' => 'required|min:4',
+            'terms_conditions_en' => 'required|min:4',
+            'name_ar' => "required|string|min:3|max:191",
+            'description_ar' => 'required|min:4',
+            'terms_conditions_ar' => 'required|min:4',
             'category_id' => 'required|int',
             'image' => 'required',
-            'description' => 'required|min:4',
-            'terms_conditions' => 'required|min:4',
             'price' => 'required|between:0,99.99',
             'status' => 'required|in:active,unactive',
         ]);
@@ -99,11 +104,14 @@ class ServicesController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Service ID Not Found',], 404);
 
         $validator = Validator::make($request->all(), [
-            'name' => "required|string|min:3|max:191",
+            'name_en' => "required|string|min:3|max:191",
+            'description_en' => 'required|min:4',
+            'terms_conditions_en' => 'required|min:4',
+            'name_ar' => "required|string|min:3|max:191",
+            'description_ar' => 'required|min:4',
+            'terms_conditions_ar' => 'required|min:4',
             'category_id' => 'required|int',
             'image' => 'required',
-            'description' => 'required|min:4',
-            'terms_conditions' => 'required|min:4',
             'price' => 'required|between:0,99.99',
             'status' => 'required|in:active,unactive',
         ]);

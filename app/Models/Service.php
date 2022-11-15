@@ -2,21 +2,23 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Translatable\HasTranslations;
 
 
 class Service extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['category_id', 'name', 'image', 'description', 'terms_conditions', 'price', 'status'];
+    protected $fillable = ['category_id', 'image', 'name_en', 'description_en', 'terms_conditions_en','name_ar', 'description_ar', 'terms_conditions_ar', 'price', 'status'];
 
-    use HasTranslations;
-
-    public $translatable = ['name','description','terms_conditions'];
-
+    public static function Booted()
+    {
+        static::addGlobalScope('query_data_service', function (Builder $builder) {
+            $builder->select(['id','name_'.app()->getLocale() .' as name','description_'.app()->getLocale() .' as description','terms_conditions_'.app()->getLocale() .' as terms_conditions' ,'image','status']);
+        });
+    }
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');

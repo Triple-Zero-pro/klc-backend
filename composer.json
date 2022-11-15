@@ -11,8 +11,7 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "php-open-source-saver/jwt-auth": "^2.0",
-        "prettus/l5-repository": "^2.8",
-        "spatie/laravel-translatable": "^6.1"
+        "prettus/l5-repository": "^2.8"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

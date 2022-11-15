@@ -19,8 +19,9 @@ class CategoriesController extends Controller
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index(Request $request): \Illuminate\Http\JsonResponse
     {
+        app()->setLocale($request->header('lang'));
         try {
             $categories = $this->categoryRepository->index();
             if (isset($categories) && count($categories) > 0) {
@@ -50,7 +51,7 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => "required|string|min:3|max:191",
+            'name_en' => "required|string|min:3|max:191",
             'name_ar' => "required|string|min:3|max:191",
             'image' => 'required',
             'status' => 'required|in:active,archived',
@@ -76,8 +77,9 @@ class CategoriesController extends Controller
     {
 
     }
-    public function show($category_id): \Illuminate\Http\JsonResponse
+    public function show(Request $request,$category_id): \Illuminate\Http\JsonResponse
     {
+        app()->setLocale($request->header('lang'));
         try {
             $category = $this->categoryRepository->show($category_id);
             if (isset($category)) {
@@ -106,7 +108,7 @@ class CategoriesController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Category ID Not Found',], 404);
 
         $validator = Validator::make($request->all(), [
-            'name' => "required|string|min:3|max:191",
+            'name_en' => "required|string|min:3|max:191",
             'name_ar' => "required|string|min:3|max:191",
             'image' => 'required',
             'status' => 'required|in:active,archived',
@@ -128,7 +130,7 @@ class CategoriesController extends Controller
     }
 
 
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
         if (!$category_check = $this->categoryRepository->show($id))
             return response()->json(['status' => 'error', 'message' => 'Category ID Not Found',], 404);
