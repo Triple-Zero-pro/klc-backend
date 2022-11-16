@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\AboutUs;
 use App\Models\Onboard;
 use App\Repositories\OnboardRepository as OnboardRepository;
 use Exception;
@@ -112,8 +113,8 @@ class OnboardsController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
         $data_request = $request->post();
-        $onboard = $this->onboardRepository->update_onboard($data_request, $id);
         try {
+            $onboard = $this->onboardRepository->update_onboard($data_request, $id);
             if ($onboard)
                 return response()->json(['status' => 'success', 'message' => 'Onboard Updated Successfully', 'data' => $onboard]);
         } catch (Exception $e) {
@@ -132,6 +133,76 @@ class OnboardsController extends Controller
         try {
             $onboard = $this->onboardRepository->destroy_onboard($id);
             return response()->json(['status' => 'success', 'message' => 'Onboard Deleted Successfully']);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
+    public function about_us(Request $request)
+    {
+        app()->setLocale($request->header('lang'));
+        try {
+            $about_us = AboutUs::find(1);
+            if (isset($about_us)) {
+                return response()->json([
+                    'status' => 'success',
+                    'data' => $about_us,
+                ]);
+            } else {
+                return response()->json([
+                    'data' => '',
+                    'message' => 'About US Not  Found',
+                ], 404);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+
+    }
+
+    public function about_us_update(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'logo' => 'required',
+            'phone' => 'required',
+            'location' => 'required',
+            'linkedin' => 'required',
+            'facebook' => 'required',
+            'twitter' => 'required',
+            'address_ar' => "required|string|min:3",
+            'address_en' => "required|string|min:3",
+            'aboutUs_ar' => "required|string|min:3",
+            'aboutUs_en' => "required|string|min:3",
+            'terms_condition_ar' => "required|string|min:3",
+            'terms_condition_en' => "required|string|min:3",
+        ]);
+        if ($validator->fails())
+            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
+
+        try {
+            $about_us = AboutUs::UpdateOrCreate([
+                'id' => 1,
+                'logo' => $request->logo,
+                'phone' => $request->phone,
+                'location' => $request->location,
+                'linkedin' => $request->linkedin,
+                'facebook' => $request->facebook,
+                'twitter' => $request->twitter,
+                'address_ar' => $request->address_ar,
+                'address_en' => $request->address_en,
+                'aboutUs_ar' => $request->aboutUs_ar,
+                'aboutUs_en' => $request->aboutUs_en,
+                'terms_condition_ar' => $request->terms_condition_ar,
+                'terms_condition_en' => $request->terms_condition_en,
+            ]);
+            if ($about_us)
+                return response()->json(['status' => 'success', 'message' => 'About Us Updated Successfully', 'data' => $about_us]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',

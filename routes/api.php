@@ -33,5 +33,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::resource('services', ServicesController::class);
     Route::get('get_services_by_category/{category_id}', [ServicesController::class, 'get_services_by_category']);
     Route::resource('onboards', OnboardsController::class);
+    Route::get('about-us', [OnboardsController::class, 'about_us']);
+    Route::post('about-us', [OnboardsController::class, 'about_us_update']);
 });
 
