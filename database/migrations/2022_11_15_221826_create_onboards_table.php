@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('onboards', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('username')->unique();
-            $table->string('password');
-            $table->string('phone_number')->unique();
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->string('title_en','191');
+            $table->text('description_en')->nullable();
+            $table->string('title_ar','191');
+            $table->text('description_ar')->nullable();
+            $table->text('image')->nullable();
+            $table->enum('status',['active','inactive'])->default('active');
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admins');
+        Schema::dropIfExists('onboards');
     }
 };
