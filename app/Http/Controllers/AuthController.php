@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -95,4 +96,20 @@ class AuthController extends Controller
             ]
         ]);
     }
+
+
+    public function profile()
+    {
+        try {
+            $user= Auth::user();
+            if ($user)
+                return response()->json(['status' => 'success','message' => 'User Profile', 'data' => $user]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
 }
