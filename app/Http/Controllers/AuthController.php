@@ -112,4 +112,35 @@ class AuthController extends Controller
         }
     }
 
+
+    public function update(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+            'phone' => 'required|string|min:6|unique:users',
+        ]);
+        if ($validator->fails())
+            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
+
+        try {
+            $user = Auth::user()->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'password' => Hash::make($request->password),
+            ]);
+            if ($user)
+                return response()->json(['status' => 'success','message' => 'Category Updated Successfully', 'data' => $user]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
+
 }
