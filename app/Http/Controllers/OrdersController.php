@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Repositories\OrderRepository as OrderRepository;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class OrdersController extends Controller
@@ -62,7 +63,6 @@ class OrdersController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|int',
             'service_id' => 'required|int',
             'from' => 'required|min:4',
             'to' => 'required|min:4',
@@ -81,6 +81,7 @@ class OrdersController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
         $data_request = $request->post();
+        $data_request['user_id'] = Auth::user()->id;
         try {
             $order = $this->orderRepository->store_order($data_request);
             if ($order)

@@ -32,14 +32,15 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('profile', 'update');
 });
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::resource('categories', CategoriesController::class);
-    Route::resource('services', ServicesController::class);
+    Route::resource('categories', CategoriesController::class)->except(['store','update','destroy']);
+    Route::resource('services', ServicesController::class)->except(['store','update','destroy']);
     Route::get('get_services_by_category/{category_id}', [ServicesController::class, 'get_services_by_category']);
-    Route::resource('onboards', OnboardsController::class);
-    Route::resource('orders', OrdersController::class);
-    Route::post('orders/update-status/{order_id}', [OrdersController::class, 'update_status']);
+    Route::resource('onboards', OnboardsController::class)->only(['index','show']);
+    Route::resource('orders', OrdersController::class)->except(['update','destroy','index','show']);
+    //Route::post('orders/update-status/{order_id}', [OrdersController::class, 'update_status']);
     Route::get('user/orders', [OrdersController::class, 'get_orders_by_user_id']);
-    Route::get('about-us', [OnboardsController::class, 'about_us']);
     Route::post('about-us', [OnboardsController::class, 'about_us_update']);
 });
 
+///////////////////////////// public routes //////////////////////////////
+Route::get('about-us', [OnboardsController::class, 'about_us']);
