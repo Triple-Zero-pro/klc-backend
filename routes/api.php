@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\OnboardsController;
+use App\Http\Controllers\OrdersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::resource('services', ServicesController::class);
     Route::get('get_services_by_category/{category_id}', [ServicesController::class, 'get_services_by_category']);
     Route::resource('onboards', OnboardsController::class);
+    Route::resource('orders', OrdersController::class);
+    Route::post('orders/update-status/{order_id}', [OrdersController::class, 'update_status']);
+    Route::get('user/orders', [OrdersController::class, 'get_orders_by_user_id']);
     Route::get('about-us', [OnboardsController::class, 'about_us']);
     Route::post('about-us', [OnboardsController::class, 'about_us_update']);
 });

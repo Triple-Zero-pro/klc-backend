@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('service_id')->nullable()->constrained('services')->nullOnDelete();
             $table->text('from');
             $table->text('to');
             $table->date('appointment_date');
@@ -24,7 +25,7 @@ return new class extends Migration
             $table->string('image_back')->nullable();
             $table->string('image_ticket')->nullable();
             $table->string('image_passport')->nullable();
-            $table->string('payment_method');
+            $table->string('payment_method')->default('cod');
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
             $table->enum('status', ['pending', 'processing', 'delivering', 'completed', 'cancelled', 'refunded'])->default('pending');
             $table->float('total')->default(0);
