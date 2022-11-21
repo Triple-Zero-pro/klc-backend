@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bd0f467fb19efb83b0097cfe651e63c2",
+    "content-hash": "a91dd463d75d7c252ab91e8a28db94c1",
     "packages": [
         {
             "name": "brick/math",
@@ -5682,6 +5682,66 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/2.2.5"
             },
             "time": "2022-09-12T13:28:28+00:00"
+        },
+        {
+            "name": "vectoor/laravel-multi-sms-methods",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vect0o0r/laravel-multi-sms-methods.git",
+                "reference": "3f844c7eb5d1477cab2afe06b0a66d89c0f3c257"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vect0o0r/laravel-multi-sms-methods/zipball/3f844c7eb5d1477cab2afe06b0a66d89c0f3c257",
+                "reference": "3f844c7eb5d1477cab2afe06b0a66d89c0f3c257",
+                "shasum": ""
+            },
+            "require": {
+                "ext-simplexml": "*",
+                "guzzlehttp/guzzle": "^7.5",
+                "illuminate/support": "^9.36",
+                "php": "^8.1",
+                "vlucas/phpdotenv": "^5.5"
+            },
+            "require-dev": {
+                "laravel/lumen-framework": "9.*",
+                "orchestra/testbench": "^7.11",
+                "phpunit/phpunit": "^9.5",
+                "roave/security-advisories": "dev-latest"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Vector\\LaravelMultiSmsMethods\\Providers\\SmsServiceProvider"
+                    ],
+                    "aliases": {
+                        "Debugbar": "Vector\\LaravelMultiSmsMethods\\Facade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Vector\\LaravelMultiSmsMethods\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Vector",
+                    "email": "mo.khaled.yousef@gmail.com"
+                }
+            ],
+            "description": "multi payment methods for laravel",
+            "support": {
+                "issues": "https://github.com/vect0o0r/laravel-multi-sms-methods/issues",
+                "source": "https://github.com/vect0o0r/laravel-multi-sms-methods/tree/1.0.0"
+            },
+            "time": "2022-11-15T17:19:07+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

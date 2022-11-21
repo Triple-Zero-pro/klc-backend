@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('verification_code')->unique()->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
