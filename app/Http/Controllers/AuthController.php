@@ -134,7 +134,7 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
             ]);
             if ($user)
-                return response()->json(['status' => 'success','message' => 'Category Updated Successfully', 'data' => $user]);
+                return response()->json(['status' => 'success','message' => 'User Updated Successfully', 'data' => $user]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
