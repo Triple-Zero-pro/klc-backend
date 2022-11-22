@@ -44,9 +44,9 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    public function wallets()
+    public function user_credits()
     {
-        return $this->hasOne(Wallet::class, 'user_id', 'id');
+        return $this->hasMany(UserCredit::class, 'user_id', 'id');
     }
 
     /**
