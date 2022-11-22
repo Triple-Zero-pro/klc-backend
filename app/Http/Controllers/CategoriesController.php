@@ -89,6 +89,7 @@ class CategoriesController extends Controller
                 ]);
             } else {
                 return response()->json([
+                    'status' => 'error',
                     'data' => '',
                     'message' => 'Category ID Not  Found',
                 ], 404);

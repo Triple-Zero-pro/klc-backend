@@ -85,6 +85,7 @@ class OnboardsController extends Controller
                 ]);
             } else {
                 return response()->json([
+                    'status' => 'error',
                     'data' => '',
                     'message' => 'Onboard ID Not  Found',
                 ], 404);
@@ -153,6 +154,7 @@ class OnboardsController extends Controller
                 ]);
             } else {
                 return response()->json([
+                    'status' => 'error',
                     'data' => '',
                     'message' => 'About US Not  Found',
                 ], 404);
