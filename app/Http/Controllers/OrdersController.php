@@ -63,7 +63,7 @@ class OrdersController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'service_id' => 'required|int',
+            'service_id' => 'required|numeric',
             'from' => 'required|min:4',
             'to' => 'required|min:4',
             'appointment_date' => 'required|date',
@@ -107,8 +107,8 @@ class OrdersController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Order ID Not Found',], 404);
 
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|int',
-            'service_id' => 'required|int',
+            'user_id' => 'required|numeric',
+            'service_id' => 'required|numeric',
             'from' => 'required|min:4',
             'to' => 'required|min:4',
             'appointment_date' => 'required',

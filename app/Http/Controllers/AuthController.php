@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserCredit;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -205,6 +206,77 @@ class AuthController extends Controller
             ], 400);
         }
 
+    }
+
+    public function add_credit(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'payment_method' => 'required|string',
+            'credit_number' => 'required|numeric|unique:user_credits',
+            'credit_name' => 'required|string',
+            'expired_date' => 'required',
+            'cvv' => 'required|numeric',
+            ]);
+
+        if ($validator->fails())
+            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
+
+        try {
+            $add_credit = UserCredit::create([
+                'user_id' =>Auth::user()->id ,
+                'payment_method' => $request->payment_method ?? NULL,
+                'credit_number' => $request->credit_number,
+                'credit_name' => $request->credit_name,
+                'expired_date' => $request->expired_date,
+                'cvv' => $request->cvv,
+            ]);
+            if ($add_credit)
+                return response()->json(['status' => 'success', 'message' => 'Credit Card Added Successfully', 'data' => $add_credit]);
+
+            return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Again'],400);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+
+    }
+
+    public function delete_credit($id)
+    {
+        $credit_check = UserCredit::where(['id'=>$id,'user_id'=>Auth::user()->id])->first();
+
+        if ($credit_check == false)
+            return response()->json(['status' => 'error', 'message' => 'Credit ID Not Found',], 404);
+
+        try {
+            $credit_check = $credit_check->delete();
+            if ($credit_check)
+                return response()->json(['status' => 'success', 'message' => 'Credit Deleted Successfully']);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+    public function all_credit()
+    {
+        try {
+            $credits = UserCredit::where('user_id',Auth::user()->id)->get();
+
+            if (isset($credits) && count($credits) > 0)
+                return response()->json(['status' => 'success', 'data' => $credits]);
+
+            return response()->json(['data' => '', 'message' => 'Not Credits Found',], 404);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
     }
 
 

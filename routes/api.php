@@ -33,6 +33,9 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('send-verification-code', 'send_verification_code');
     Route::post('apply-verification-code/{phone_number}', 'apply_verification_code');
     Route::post('reset-password/{phone_number}', 'reset_password');
+    Route::post('add-credit', 'add_credit');
+    Route::get('delete-credit/{credit_id}', 'delete_credit');
+    Route::get('all-credit', 'all_credit');
 });
 Route::group(['middleware' => 'auth:api'], function () {
     Route::resource('categories', CategoriesController::class)->except(['store','update','destroy']);

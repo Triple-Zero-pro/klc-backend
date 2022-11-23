@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('payment_method')->nullable();
-            $table->integer('credit_number')->nullable();
+            $table->bigInteger('credit_number')->unique()->nullable();
             $table->string('credit_name')->nullable();
-            $table->date('expired_date')->nullable();
+            $table->string('expired_date')->nullable();
             $table->integer('cvv')->nullable();
             $table->timestamps();
         });
