@@ -45,6 +45,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::resource('orders', OrdersController::class)->except(['update','destroy','index','show']);
     //Route::post('orders/update-status/{order_id}', [OrdersController::class, 'update_status']);
     Route::get('user/orders', [OrdersController::class, 'get_orders_by_user_id']);
+    Route::post('user/cancel-order/{order_id}', [AuthController::class, 'cancel_order']);
     Route::post('about-us', [OnboardsController::class, 'about_us_update']);
 });
 

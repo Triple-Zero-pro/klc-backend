@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\User;
 use App\Models\UserCredit;
 use Exception;
@@ -51,7 +52,7 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+           // 'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
             'phone' => 'required|string|min:6|unique:users',
         ]);
@@ -61,7 +62,7 @@ class AuthController extends Controller
 
         $user = User::create([
             'name' => $request->name,
-            'email' => $request->email,
+            //'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
         ]);
@@ -120,7 +121,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            //'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
             'phone' => 'required|string|min:6|unique:users',
         ]);
@@ -130,7 +131,7 @@ class AuthController extends Controller
         try {
             $user = Auth::user()->update([
                 'name' => $request->name,
-                'email' => $request->email,
+               // 'email' => $request->email,
                 'phone' => $request->phone,
                 'password' => Hash::make($request->password),
             ]);
@@ -269,7 +270,7 @@ class AuthController extends Controller
             if (isset($credits) && count($credits) > 0)
                 return response()->json(['status' => 'success', 'data' => $credits]);
 
-            return response()->json(['data' => '', 'message' => 'Not Credits Found',], 404);
+            return response()->json(['status' => 'error','data' => '', 'message' => 'Not Credits Found',], 404);
 
         } catch (Exception $e) {
             return response()->json([
@@ -278,6 +279,32 @@ class AuthController extends Controller
             ], 400);
         }
     }
+
+
+    public function cancel_order($order_id)
+    {
+        $check_order = Order::where('id',$order_id)->where('user_id',Auth::user()->id)->first();
+            if (!$check_order)
+                return response()->json(['status' => 'error','data' => '', 'message' => 'Order Not Valid'], 404);
+        try {
+            $cancel_order = $check_order->update([
+                'status' => 'cancelled' ,
+            ]);
+            if ($cancel_order)
+                return response()->json(['status' => 'success', 'message' => 'Order Canceled Now ', 'data' => '']);
+
+            return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Canceled Again'],400);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+
+    }
+
+
+
 
 
 
