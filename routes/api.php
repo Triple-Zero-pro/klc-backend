@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\OnboardsController;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\ServiceAttributesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,14 +39,33 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('all-credit', 'all_credit');
 });
 Route::group(['middleware' => 'auth:api'], function () {
+    //////////////////////////// category ///////////////////////////////
     Route::resource('categories', CategoriesController::class)->except(['store','update','destroy']);
+
+
+    //////////////////////////// service ///////////////////////////////
     Route::resource('services', ServicesController::class)->except(['store','update','destroy']);
     Route::get('get_services_by_category/{category_id}', [ServicesController::class, 'get_services_by_category']);
+
+
+    //////////////////////////// service-attributes ///////////////////////////////
+    Route::get('service-attributes/{service_id}', [ServiceAttributesController::class,'index']);
+    Route::post('service-attributes/{service_id}', [ServiceAttributesController::class,'store']);
+    Route::delete('service-attributes/{service_id}', [ServiceAttributesController::class,'destroy']);
+
+
+    //////////////////////////// onboards ///////////////////////////////
     Route::resource('onboards', OnboardsController::class)->only(['index','show']);
+
+    //////////////////////////// orders ///////////////////////////////
+
     Route::resource('orders', OrdersController::class)->except(['update','destroy','index','show']);
-    //Route::post('orders/update-status/{order_id}', [OrdersController::class, 'update_status']);
     Route::get('user/orders', [OrdersController::class, 'get_orders_by_user_id']);
     Route::post('user/cancel-order/{order_id}', [AuthController::class, 'cancel_order']);
+    //Route::post('orders/update-status/{order_id}', [OrdersController::class, 'update_status']);
+
+
+    //////////////////////////// OnboardsController ///////////////////////////////
     Route::post('about-us', [OnboardsController::class, 'about_us_update']);
 });
 
