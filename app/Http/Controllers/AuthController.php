@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Vector\LaravelMultiSmsMethods\Facade\Sms;
 
 class AuthController extends Controller
@@ -124,8 +125,8 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             //'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-            'phone' => 'required|string|min:6|unique:users',
+            //'password' => 'required|string|min:6',
+            //'phone' => 'required|string|min:6|unique:users',
         ]);
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
@@ -134,8 +135,8 @@ class AuthController extends Controller
             $user = Auth::user()->update([
                 'name' => $request->name,
                // 'email' => $request->email,
-                'phone' => $request->phone,
-                'password' => Hash::make($request->password),
+                'phone' => (isset($request->phone) && $request->phone != NULL)  ? $request->password : Auth::user()->phone,
+                'password' => (isset($request->password) && $request->password != NULL)  ? Hash::make($request->password) : Auth::user()->getAuthPassword(),
             ]);
             if ($user)
                 return response()->json(['status' => 'success','message' => 'User Updated Successfully', 'data' => $user]);
