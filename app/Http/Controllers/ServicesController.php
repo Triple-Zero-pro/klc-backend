@@ -23,8 +23,11 @@ class ServicesController extends Controller
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
         $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
+        $category_id = 0;
+        if ($request->category_id)
+            $category_id = $request->category_id;
         try {
-            $services = $this->serviceRepository->index();
+            $services = $this->serviceRepository->index($category_id);
             if (isset($services) && count($services) > 0)
                 return response()->json(['status' => 'success', 'data' => $services]);
             else
