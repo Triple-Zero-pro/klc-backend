@@ -139,7 +139,7 @@ class AuthController extends Controller
                 'password' => (isset($request->password) && $request->password != NULL)  ? Hash::make($request->password) : Auth::user()->getAuthPassword(),
             ]);
             if ($user)
-                return response()->json(['status' => 'success','message' => 'User Updated Successfully', 'data' => $user]);
+                return response()->json(['status' => 'success','message' => 'User Updated Successfully', 'data' => Auth::user()]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
