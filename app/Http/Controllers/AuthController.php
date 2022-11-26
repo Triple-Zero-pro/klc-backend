@@ -135,7 +135,8 @@ class AuthController extends Controller
             $user = Auth::user()->update([
                 'name' => $request->name,
                // 'email' => $request->email,
-                'phone' => (isset($request->phone) && $request->phone != NULL)  ? $request->password : Auth::user()->phone,
+                'email' => (isset($request->email) && $request->email != NULL)  ? $request->email : Auth::user()->email,
+                'phone' => (isset($request->phone) && $request->phone != NULL)  ? $request->phone : Auth::user()->phone,
                 'password' => (isset($request->password) && $request->password != NULL)  ? Hash::make($request->password) : Auth::user()->getAuthPassword(),
             ]);
             if ($user)
