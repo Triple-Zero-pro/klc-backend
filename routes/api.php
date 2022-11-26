@@ -54,8 +54,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::delete('service-attributes/{service_id}', [ServiceAttributesController::class,'destroy']);
 
 
-    //////////////////////////// onboards ///////////////////////////////
-    Route::resource('onboards', OnboardsController::class)->only(['index','show']);
 
     //////////////////////////// orders ///////////////////////////////
 
@@ -71,3 +69,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 ///////////////////////////// public routes //////////////////////////////
 Route::get('about-us', [OnboardsController::class, 'about_us']);
+
+//////////////////////////// onboards ///////////////////////////////
+Route::resource('onboards', OnboardsController::class);
