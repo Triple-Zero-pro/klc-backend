@@ -21,7 +21,7 @@ class CategoriesController extends Controller
 
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
-        app()->setLocale($request->header('lang'));
+        $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
         try {
             $categories = $this->categoryRepository->index();
             if (isset($categories) && count($categories) > 0) {
@@ -79,7 +79,7 @@ class CategoriesController extends Controller
     }
     public function show(Request $request,$category_id): \Illuminate\Http\JsonResponse
     {
-        app()->setLocale($request->header('lang'));
+        $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
         try {
             $category = $this->categoryRepository->show($category_id);
             if (isset($category)) {

@@ -22,7 +22,7 @@ class ServicesController extends Controller
 
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
-        app()->setLocale($request->header('lang'));
+        $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
         try {
             $services = $this->serviceRepository->index();
             if (isset($services) && count($services) > 0)
@@ -44,7 +44,7 @@ class ServicesController extends Controller
     }
     public function show(Request $request,$service_id)
     {
-        app()->setLocale($request->header('lang'));
+        $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
         try {
             $service = $this->serviceRepository->show($service_id);
             if (isset($service))

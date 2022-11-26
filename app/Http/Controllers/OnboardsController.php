@@ -22,7 +22,7 @@ class OnboardsController extends Controller
 
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
-        app()->setLocale($request->header('lang'));
+        $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
         try {
             $onboards = $this->onboardRepository->index();
             if (isset($onboards) && count($onboards) > 0)
@@ -75,7 +75,7 @@ class OnboardsController extends Controller
 
     public function show(Request $request, $onboard_id): \Illuminate\Http\JsonResponse
     {
-        app()->setLocale($request->header('lang'));
+        $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
         try {
             $onboard = $this->onboardRepository->show($onboard_id);
             if (isset($onboard)) {
@@ -144,7 +144,7 @@ class OnboardsController extends Controller
 
     public function about_us(Request $request)
     {
-        app()->setLocale($request->header('lang'));
+        $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
         try {
             $about_us = AboutUs::find(1);
             if (isset($about_us)) {
