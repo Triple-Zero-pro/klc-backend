@@ -31,7 +31,7 @@ class ServicesController extends Controller
             if (isset($services) && count($services) > 0)
                 return response()->json(['status' => 'success', 'data' => $services]);
             else
-                return response()->json(['status' => 'error','data' => '', 'message' => 'Not Services Found',], 404);
+                return response()->json(['status' => 'success','data' => [], 'message' => 'Not Services Found',], 404);
 
         } catch (Exception $e) {
             return response()->json([
@@ -41,10 +41,6 @@ class ServicesController extends Controller
         }
     }
 
-    public function create()
-    {
-
-    }
     public function show(Request $request,$service_id)
     {
         $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);

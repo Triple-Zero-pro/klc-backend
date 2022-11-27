@@ -31,7 +31,7 @@ class CategoriesController extends Controller
                 ]);
             } else {
                 return response()->json([
-                    'data' => '',
+                    'status' => 'success','data' => [],
                     'message' => 'Not Categories Found',
                 ], 404);
             }
