@@ -18,9 +18,7 @@ class ServiceAttributeRepository extends BaseRepository
 
     public function index($service_id)
     {
-        return $this->model->with(['service' => function ($query) {
-            $query->select('id', 'title');
-        }])->where('service_id',$service_id)->paginate(15);
+        return $this->model->where('service_id',$service_id)->get();
     }
 
 

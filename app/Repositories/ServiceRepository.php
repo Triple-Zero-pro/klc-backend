@@ -21,9 +21,9 @@ class ServiceRepository extends BaseRepository
     public function index($category_id)
     {
         if ($category_id != 0)
-            return $this->model->where('category_id',$category_id)->with(['category' => function ($query) {$query->select('id', 'name');}])->paginate(15);
+            return $this->model->where('category_id',$category_id)->with(['category','serviceAttributes'])->paginate(15);
 
-        return $this->model->with(['category' => function ($query) {$query->select('id', 'name');}])->paginate(15);
+        return $this->model->with(['category','serviceAttributes'])->paginate(15);
     }
 
     public function show($service_id)
