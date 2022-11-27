@@ -63,6 +63,10 @@ class ServiceRepository extends BaseRepository
             ->select('services.image', 'services.price', 'services.name',)
             ->get();
     }
+    public function get_services_by_name($service_name,$lang)
+    {
+        return $this->model->where('name_'.$lang.'','LIKE','%'.$service_name.'%')->get();
+    }
 
 
     function model(): string

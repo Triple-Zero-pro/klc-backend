@@ -31,7 +31,7 @@ class ServicesController extends Controller
             if (isset($services) && count($services) > 0)
                 return response()->json(['status' => 'success', 'data' => $services]);
             else
-                return response()->json(['status' => 'success','data' => [], 'message' => 'Not Services Found',], 404);
+                return response()->json(['status' => 'success','data' => [], 'message' => 'Not Services Found']);
 
         } catch (Exception $e) {
             return response()->json([
@@ -49,7 +49,7 @@ class ServicesController extends Controller
             if (isset($service))
                 return response()->json(['status' => 'success', 'data' => $service]);
             else
-                return response()->json(['status' => 'error','data' => '', 'message' => 'Not Services Found',], 404);
+                return response()->json(['status' => 'success','data' => '', 'message' => 'Not Services Found']);
 
         } catch (Exception $e) {
             return response()->json([
@@ -158,7 +158,24 @@ class ServicesController extends Controller
             if (isset($services) && count($services) > 0)
                 return response()->json(['status' => 'success', 'data' => $services]);
             else
-                return response()->json(['status' => 'error', 'message' => 'Services Not Found'], 404);
+                return response()->json(['status' => 'success', 'message' => 'Services Not Found'], 404);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+    public function get_services_by_name(Request $request,$service_name)
+    {
+        $lang = $request->header('lang') ?? 'ar' ; app()->setLocale($lang);
+        $services = $this->serviceRepository->get_services_by_name($service_name,$lang);
+        try {
+            if (isset($services) && count($services) > 0)
+                return response()->json(['status' => 'success', 'data' => $services]);
+            else
+                return response()->json(['status' => 'success', 'data' => [] ,'message' => 'Services Not Found'], 404);
 
         } catch (Exception $e) {
             return response()->json([
