@@ -65,7 +65,7 @@ class OrderRepository extends BaseRepository
 
     public function get_orders_by_user_id()
     {
-        return $this->model->where('user_id', Auth::user()->id)->get();
+        return $this->model->where('user_id', Auth::user()->id)->with('service')->get();
     }
 
 

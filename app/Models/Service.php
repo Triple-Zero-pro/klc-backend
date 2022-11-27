@@ -16,7 +16,7 @@ class Service extends Model
     public static function Booted()
     {
         static::addGlobalScope('query_data_service', function (Builder $builder) {
-            $builder->select(['id','name_'.app()->getLocale() .' as name','description_'.app()->getLocale() .' as description','terms_conditions_'.app()->getLocale() .' as terms_conditions' ,'image','status']);
+            $builder->select(['id','name_'.app()->getLocale() .' as name','description_'.app()->getLocale() .' as description','terms_conditions_'.app()->getLocale() .' as terms_conditions' ,'image','price','status']);
         });
     }
     public function category()
