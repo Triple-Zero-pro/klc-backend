@@ -33,7 +33,7 @@ class ServiceAttributesController extends Controller
             if (isset($serviceAttributes) && count($serviceAttributes) > 0)
                 return response()->json(['status' => 'success', 'data' => $serviceAttributes]);
             else
-                return response()->json(['status' => 'error', 'data' => '', 'message' => 'Not Service Attributes Found',], 404);
+                return response()->json(['status' => 'success', 'data' => [], 'message' => 'Not Service Attributes Found',], 404);
 
         } catch (Exception $e) {
             return response()->json([
