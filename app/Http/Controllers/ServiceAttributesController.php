@@ -23,7 +23,8 @@ class ServiceAttributesController extends Controller
 
     public function index(Request $request, $service_id): \Illuminate\Http\JsonResponse
     {
-        $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
+        $lang = $request->header('lang') ?? 'ar';
+        app()->setLocale($lang);
         if (!$check_service = Service::find($service_id))
             return response()->json(['status' => 'error', 'message' => 'Service ID Not Found',], 404);
 
@@ -79,7 +80,6 @@ class ServiceAttributesController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Again',], 400);
         }
     }
-
 
 
 }

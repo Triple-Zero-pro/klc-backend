@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title_ar')->nullable();
             $table->string('title_en')->nullable();
             $table->string('input_name')->nullable();
-            $table->enum('input_type', ['text', 'file'])->default('text');
+            $table->enum('input_type', ['text', 'checkbox'])->default('text');
             $table->timestamps();
         });
     }
