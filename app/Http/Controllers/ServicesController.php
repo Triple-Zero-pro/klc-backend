@@ -77,7 +77,8 @@ class ServicesController extends Controller
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
-        $data_request = $request->post();
+        $data_request = $request->except('image');
+        $data_request['image'] = $this->uploadImage($request);
         try {
             $service = $this->serviceRepository->store_service($data_request);
             if ($service)
@@ -91,10 +92,7 @@ class ServicesController extends Controller
         }
     }
 
-    public function edit($id)
-    {
 
-    }
 
 
     public function update(Request $request, $id)
@@ -117,7 +115,8 @@ class ServicesController extends Controller
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
-        $data_request = $request->post();
+        $data_request = $request->except('image');
+        $data_request['image'] = $this->uploadImage($request);
         try {
             $service = $this->serviceRepository->update_service($data_request, $id);
             if ($service)
@@ -183,6 +182,15 @@ class ServicesController extends Controller
                 'message' => 'Something wrong Please Try Again',
             ], 400);
         }
+    }
+    protected function uploadImage(Request $request)
+    {
+        if (!$request->hasFile('image'))
+            return;
+
+        $file = $request->file('image');
+        return $file->store('uploads', 'public');
+
     }
 
 

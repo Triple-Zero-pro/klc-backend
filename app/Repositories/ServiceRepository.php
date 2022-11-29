@@ -55,6 +55,8 @@ class ServiceRepository extends BaseRepository
             return false;
 
         $service->delete();
+        if ($service->image)
+            Storage::disk('public')->delete($service->image);
     }
 
     public function get_services_by_category($category_id)

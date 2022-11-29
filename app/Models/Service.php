@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 
 class Service extends Model
@@ -19,6 +20,17 @@ class Service extends Model
             $builder->select(['id','name_'.app()->getLocale() .' as name','description_'.app()->getLocale() .' as description','terms_conditions_'.app()->getLocale() .' as terms_conditions' ,'image','price','status']);
         });
     }
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return 'https://www.incathlab.com/images/products/default_product.png';
+        }
+        if (Str::startsWith($this->image, ['http://', 'https://'])) {
+            return $this->image;
+        }
+        return asset('storage/' . $this->image);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');

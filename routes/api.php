@@ -43,6 +43,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::resource('categories', CategoriesController::class)->except(['store','update','destroy']);
     //////////////////////////// service ///////////////////////////////
     Route::resource('services', ServicesController::class)->except(['store','update','destroy']);
+    Route::post('services/{id}', [ServicesController::class, 'update']);
     Route::get('get_services_by_category/{category_id}', [ServicesController::class, 'get_services_by_category']);
     Route::get('get_services_by_name/{service_name}', [ServicesController::class, 'get_services_by_name']);
     //////////////////////////// service-attributes ///////////////////////////////
