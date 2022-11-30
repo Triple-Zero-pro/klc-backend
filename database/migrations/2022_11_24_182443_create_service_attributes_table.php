@@ -16,10 +16,15 @@ return new class extends Migration
         Schema::create('service_attributes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_id')->nullable()->constrained('services')->nullOnDelete();
-            $table->string('title_ar')->nullable();
-            $table->string('title_en')->nullable();
-            $table->string('input_name')->nullable();
-            $table->enum('input_type', ['text', 'checkbox'])->default('text');
+            $table->boolean('from')->default(0);
+            $table->boolean('to')->default(0);
+            $table->boolean('appointment_date')->default(0);
+            $table->boolean('appointment_time')->default(0);
+            $table->boolean('images')->default(0);
+            $table->boolean('gender')->default(0);
+            $table->boolean('embassy')->default(0);
+            $table->boolean('select_service')->default(0);
+            $table->boolean('employee_status')->default(0);
             $table->timestamps();
         });
     }

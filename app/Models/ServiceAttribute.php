@@ -11,15 +11,8 @@ class ServiceAttribute extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['service_id', 'title_ar', 'title_en', 'input_name', 'input_type'];
-
-    public static function Booted()
-    {
-        static::addGlobalScope('query_data_service_attributes', function (Builder $builder) {
-            $builder->select(['id','service_id','title_' . app()->getLocale() . ' as title', 'input_name', 'input_type']);
-        });
-    }
-
+    protected $fillable = ['service_id', 'from', 'to', 'appointment_date','appointment_time', 'images', 'gender','embassy',
+        'select_service', 'employee_status'];
     public function service()
     {
         return $this->belongsTo(Service::class)->withDefault([

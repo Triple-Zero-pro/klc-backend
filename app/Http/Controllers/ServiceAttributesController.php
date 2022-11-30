@@ -21,10 +21,8 @@ class ServiceAttributesController extends Controller
         $this->serviceAttributeRepository = $serviceAttributeRepository;
     }
 
-    public function index(Request $request, $service_id): \Illuminate\Http\JsonResponse
+    public function index($service_id): \Illuminate\Http\JsonResponse
     {
-        $lang = $request->header('lang') ?? 'ar';
-        app()->setLocale($lang);
         if (!$check_service = Service::find($service_id))
             return response()->json(['status' => 'error', 'message' => 'Service ID Not Found',], 404);
 
@@ -47,10 +45,15 @@ class ServiceAttributesController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Service ID Not Found',], 404);
 
         $validator = Validator::make($request->all(), [
-            'title_en' => "required|string|min:3|max:191",
-            'title_ar' => "required|string|min:3|max:191",
-            'input_name' => 'required|string|min:4',
-            'input_type' => 'required|string|min:4|in:text,file',
+            'from' => "required",
+            'to' => "required",
+            'appointment_date' => "required",
+            'appointment_time' => "required",
+            'images' => "required",
+            'gender' => "required",
+            'embassy' => "required",
+            'select_service' => "required",
+            'employee_status' => "required",
         ]);
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
@@ -62,20 +65,6 @@ class ServiceAttributesController extends Controller
             if ($serviceAttribute)
                 return response()->json(['status' => 'success', 'message' => 'Service Attribute Created Successfully', 'data' => $serviceAttribute]);
 
-        } catch (Exception $e) {
-            return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Again',], 400);
-        }
-    }
-
-
-    public function destroy($service_attributes_id)
-    {
-        if (!$service_attributes = $this->serviceAttributeRepository->show($service_attributes_id))
-            return response()->json(['status' => 'error', 'message' => 'Service Attribute ID Not Found',], 404);
-
-        try {
-            $serviceAttribute = $this->serviceAttributeRepository->destroy_serviceAttribute($service_attributes_id);
-            return response()->json(['status' => 'success', 'message' => 'ServiceAttribute Deleted Successfully']);
         } catch (Exception $e) {
             return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Again',], 400);
         }

@@ -3,6 +3,7 @@
 
 namespace App\Repositories;
 
+use App\Models\ServiceAttribute;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 
@@ -24,23 +25,20 @@ class ServiceAttributeRepository extends BaseRepository
 
     public function store_serviceAttribute($data_request)
     {
-        return $this->model->create($data_request);
+        return ServiceAttribute::where('service_id',$data_request['service_id'])->UpdateOrCreate([
+                'from' => $data_request['from'],
+                'to' => $data_request['to'],
+                'appointment_date' => $data_request['appointment_date'],
+                'appointment_time' => $data_request['appointment_time'],
+                'images' => $data_request['images'],
+                'gender' => $data_request['gender'],
+                'embassy' => $data_request['embassy'],
+                'select_service' => $data_request['select_service'],
+                'employee_status' => $data_request['employee_status'],
+            ]);
 
     }
 
-    public function show($service_attributes_id)
-    {
-        return $this->model->find($service_attributes_id);
-    }
-
-    public function destroy_serviceAttribute($service_attributes_id)
-    {
-        $serviceAttribute = $this->model->find($service_attributes_id);
-        if ($serviceAttribute == NULL)
-            return false;
-
-        $serviceAttribute->delete();
-    }
 
 
     function model(): string
