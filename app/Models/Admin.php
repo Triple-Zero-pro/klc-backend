@@ -2,42 +2,68 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 
-class Service extends Model
+
+
+class Admin extends Authenticatable implements JWTSubject
 {
     use HasFactory;
 
-    protected $fillable = ['category_id', 'image', 'name_en', 'description_en', 'terms_conditions_en','name_ar', 'description_ar', 'terms_conditions_ar', 'price', 'status'];
+    protected $guard = 'admins';
 
-    public static function Booted()
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'admins';
+
+    protected $fillable = ['name', 'email', 'username', 'password', 'phone_number','status'];
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
     {
-        static::addGlobalScope('query_data_service', function (Builder $builder) {
-            $builder->select(['id','name_'.app()->getLocale() .' as name','description_'.app()->getLocale() .' as description','terms_conditions_'.app()->getLocale() .' as terms_conditions' ,'image','price','status']);
-        });
-    }
-    public function getImageUrlAttribute()
-    {
-        if (!$this->image) {
-            return 'https://www.incathlab.com/images/products/default_product.png';
-        }
-        if (Str::startsWith($this->image, ['http://', 'https://'])) {
-            return $this->image;
-        }
-        return asset('storage/' . $this->image);
+        return $this->getKey();
     }
 
-    public function category()
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
     {
-        return $this->belongsTo(Category::class, 'category_id', 'id');
-    }
-    public function serviceAttributes()
-    {
-        return $this->hasMany(ServiceAttribute::class, 'service_id', 'id');
+        return [];
     }
 
 }

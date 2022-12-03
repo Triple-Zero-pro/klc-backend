@@ -8,6 +8,11 @@ use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\OnboardsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ServiceAttributesController;
+use App\Http\Controllers\Dashboard\CategoriesController as DashCategoriesController;
+use App\Http\Controllers\Dashboard\ServicesController as DashServicesController;
+use App\Http\Controllers\Dashboard\OnboardsController as DashOnboardsController;
+use App\Http\Controllers\Dashboard\OrdersController as DashOrdersController;
+use App\Http\Controllers\Dashboard\ServiceAttributesController as DashServiceAttributesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,25 +46,70 @@ Route::controller(AuthController::class)->group(function () {
 Route::group(['middleware' => 'auth:api'], function () {
     //////////////////////////// category ///////////////////////////////
     Route::resource('categories', CategoriesController::class)->except(['store','update','destroy']);
+
+
     //////////////////////////// service ///////////////////////////////
     Route::resource('services', ServicesController::class)->except(['store','update','destroy']);
     Route::post('services/{id}', [ServicesController::class, 'update']);
     Route::get('get_services_by_category/{category_id}', [ServicesController::class, 'get_services_by_category']);
     Route::get('get_services_by_name/{service_name}', [ServicesController::class, 'get_services_by_name']);
+
+
     //////////////////////////// service-attributes ///////////////////////////////
     Route::get('service-attributes/{service_id}', [ServiceAttributesController::class,'index']);
     Route::post('service-attributes/{service_id}', [ServiceAttributesController::class,'store']);
     Route::delete('service-attributes/{service_id}', [ServiceAttributesController::class,'destroy']);
+
+
     //////////////////////////// orders ///////////////////////////////
     Route::resource('orders', OrdersController::class)->except(['update','destroy','index','show']);
     Route::get('user/orders', [OrdersController::class, 'get_orders_by_user_id']);
     Route::post('user/cancel-order/{order_id}', [AuthController::class, 'cancel_order']);
     Route::post('orders/update-status/{order_id}', [OrdersController::class, 'update_status']);
+
+
     //////////////////////////// OnboardsController ///////////////////////////////
     Route::post('about-us', [OnboardsController::class, 'about_us_update']);
 });
 
+
+////////////////////////////// login admin /////////////////////////
+Route::post('loginAdmin',[AuthController::class,'loginAdmin']);
+
+
+Route::group(['middleware' => 'auth:admins','prefix' => 'admin/dashboard','as'=> 'dashboard.'], function () {
+    //////////////////////////// categories ///////////////////////////////
+    Route::resource('categories', DashCategoriesController::class);
+    Route::post('categories/{id}', [DashCategoriesController::class, 'update']);
+
+
+    //////////////////////////// service ///////////////////////////////
+    Route::resource('services', DashServicesController::class);
+    Route::post('services/{id}', [DashServicesController::class, 'update']);
+    Route::get('get_services_by_category/{category_id}', [DashServicesController::class, 'get_services_by_category']);
+    Route::get('get_services_by_name/{service_name}', [DashServicesController::class, 'get_services_by_name']);
+
+
+    //////////////////////////// service-attributes ///////////////////////////////
+    Route::get('service-attributes/{service_id}', [DashServiceAttributesController::class,'index']);
+    Route::post('service-attributes/{service_id}', [DashServiceAttributesController::class,'store']);
+    Route::delete('service-attributes/{service_id}', [DashServiceAttributesController::class,'destroy']);
+
+
+    //////////////////////////// orders ///////////////////////////////
+    Route::resource('orders', DashOrdersController::class);
+    Route::get('user/orders', [DashOrdersController::class, 'get_orders_by_user_id']);
+    Route::post('user/cancel-order/{order_id}', [AuthController::class, 'cancel_order']);
+    Route::post('orders/update-status/{order_id}', [DashOrdersController::class, 'update_status']);
+
+
+    //////////////////////////// OnboardsController ///////////////////////////////
+    Route::resource('onboards', DashOnboardsController::class);
+    Route::post('about-us', [DashOnboardsController::class, 'about_us_update']);
+});
+
+
 ///////////////////////////// public routes //////////////////////////////
 Route::get('about-us', [OnboardsController::class, 'about_us']);
 //////////////////////////// onboards ///////////////////////////////////
-Route::resource('onboards', OnboardsController::class);
+Route::resource('onboards', OnboardsController::class)->except(['store','update','destroy']);

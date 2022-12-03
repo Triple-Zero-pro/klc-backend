@@ -43,40 +43,8 @@ class CategoriesController extends Controller
         }
     }
 
-    public function create()
-    {
 
-    }
 
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name_en' => "required|string|min:3|max:191",
-            'name_ar' => "required|string|min:3|max:191",
-            'image' => 'required',
-            'status' => 'required|in:active,archived',
-        ]);
-        if ($validator->fails())
-            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
-
-        $data_request = $request->post();
-        try {
-            $category = $this->categoryRepository->store_category($data_request);
-            if ($category)
-                return response()->json(['status' => 'success', 'message' => 'Category Created Successfully','data' => $category]);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Something wrong Please Try Again',
-            ], 400);
-        }
-    }
-
-    public function edit($id)
-    {
-
-    }
     public function show(Request $request,$category_id): \Illuminate\Http\JsonResponse
     {
         $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
@@ -103,47 +71,10 @@ class CategoriesController extends Controller
     }
 
 
-    public function update(Request $request, $id)
-    {
-        if (!$category_check = $this->categoryRepository->show($id))
-            return response()->json(['status' => 'error', 'message' => 'Category ID Not Found',], 404);
-
-        $validator = Validator::make($request->all(), [
-            'name_en' => "required|string|min:3|max:191",
-            'name_ar' => "required|string|min:3|max:191",
-            'image' => 'required',
-            'status' => 'required|in:active,archived',
-        ]);
-        if ($validator->fails())
-            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
-
-        $data_request = $request->post();
-        try {
-            $category = $this->categoryRepository->update_category($data_request,$id);
-            if ($category)
-                return response()->json(['status' => 'success','message' => 'Category Updated Successfully', 'data' => $category]);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Something wrong Please Try Again',
-            ], 400);
-        }
-    }
 
 
-    public function destroy(Request $request,$id)
-    {
-        if (!$category_check = $this->categoryRepository->show($id))
-            return response()->json(['status' => 'error', 'message' => 'Category ID Not Found',], 404);
-        try {
-            $category = $this->categoryRepository->destroy_category($id);
-            return response()->json(['status' => 'success', 'message' => 'Category Deleted Successfully']);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Something wrong Please Try Again',
-            ], 400);
-        }
-    }
 
-    }
+
+
+
+}

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 
@@ -16,9 +17,11 @@ class Service extends Model
 
     public static function Booted()
     {
-        static::addGlobalScope('query_data_service', function (Builder $builder) {
-            $builder->select(['id','name_'.app()->getLocale() .' as name','description_'.app()->getLocale() .' as description','terms_conditions_'.app()->getLocale() .' as terms_conditions' ,'image','price','status']);
-        });
+        if(Auth::guard('api')->check()){
+            static::addGlobalScope('query_data_service', function (Builder $builder) {
+                $builder->select(['id','name_'.app()->getLocale() .' as name','description_'.app()->getLocale() .' as description','terms_conditions_'.app()->getLocale() .' as terms_conditions' ,'image','price','status']);
+            });
+        }
     }
     public function getImageUrlAttribute()
     {

@@ -59,93 +59,6 @@ class ServicesController extends Controller
         }
     }
 
-    public function store(Request $request)
-    {
-
-        $validator = Validator::make($request->all(), [
-            'name_en' => "required|string|min:3|max:191",
-            'description_en' => 'required|min:4',
-            'terms_conditions_en' => 'required|min:4',
-            'name_ar' => "required|string|min:3|max:191",
-            'description_ar' => 'required|min:4',
-            'terms_conditions_ar' => 'required|min:4',
-            'category_id' => 'required|numeric',
-            'image' => 'required',
-            'price' => 'required|between:0,99.99',
-            'status' => 'required|in:active,unactive',
-        ]);
-        if ($validator->fails())
-            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
-
-        $data_request = $request->except('image');
-        $data_request['image'] = $this->uploadImage($request);
-        try {
-            $service = $this->serviceRepository->store_service($data_request);
-            if ($service)
-                return response()->json(['status' => 'success', 'message' => 'Service Created Successfully', 'data' => $service]);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Something wrong Please Try Again',
-            ], 400);
-        }
-    }
-
-
-
-
-    public function update(Request $request, $id)
-    {
-        if (!$serve_check = $this->serviceRepository->show($id))
-            return response()->json(['status' => 'error', 'message' => 'Service ID Not Found',], 404);
-
-        $validator = Validator::make($request->all(), [
-            'name_en' => "required|string|min:3|max:191",
-            'description_en' => 'required|min:4',
-            'terms_conditions_en' => 'required|min:4',
-            'name_ar' => "required|string|min:3|max:191",
-            'description_ar' => 'required|min:4',
-            'terms_conditions_ar' => 'required|min:4',
-            'category_id' => 'required|numeric',
-            'image' => 'required',
-            'price' => 'required|between:0,99.99',
-            'status' => 'required|in:active,unactive',
-        ]);
-        if ($validator->fails())
-            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
-
-        $data_request = $request->except('image');
-        $data_request['image'] = $this->uploadImage($request);
-        try {
-            $service = $this->serviceRepository->update_service($data_request, $id);
-            if ($service)
-                return response()->json(['status' => 'success', 'message' => 'Service Updated Successfully', 'data' => $service]);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Something wrong Please Try Again',
-            ], 400);
-        }
-    }
-
-
-    public function destroy($id)
-    {
-        if (!$serve_check = $this->serviceRepository->show($id))
-            return response()->json(['status' => 'error', 'message' => 'Service ID Not Found',], 404);
-
-        try {
-            $service = $this->serviceRepository->destroy_service($id);
-            return response()->json(['status' => 'success', 'message' => 'Service Deleted Successfully']);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Something wrong Please Try Again',
-            ], 400);
-        }
-    }
-
     public function get_services_by_category($category_id)
     {
 
@@ -166,6 +79,7 @@ class ServicesController extends Controller
             ], 400);
         }
     }
+
     public function get_services_by_name(Request $request,$service_name)
     {
         $lang = $request->header('lang') ?? 'ar' ; app()->setLocale($lang);
@@ -183,15 +97,7 @@ class ServicesController extends Controller
             ], 400);
         }
     }
-    protected function uploadImage(Request $request)
-    {
-        if (!$request->hasFile('image'))
-            return;
 
-        $file = $request->file('image');
-        return $file->store('uploads', 'public');
-
-    }
 
 
 }

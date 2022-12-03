@@ -62,7 +62,6 @@ class ServiceRepository extends BaseRepository
     public function get_services_by_category($category_id)
     {
         return $this->model->where('category_id', $category_id)
-            ->select('services.image', 'services.price', 'services.name',)
             ->get();
     }
     public function get_services_by_name($service_name,$lang)

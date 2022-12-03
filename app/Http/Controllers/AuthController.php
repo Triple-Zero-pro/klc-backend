@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use Vector\LaravelMultiSmsMethods\Facade\Sms;
 
 class AuthController extends Controller
@@ -18,7 +19,7 @@ class AuthController extends Controller
     //
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register','apply_verification_code', 'reset_password','send_verification_code']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register','loginAdmin','apply_verification_code', 'reset_password','send_verification_code']]);
     }
 
     public function login(Request $request)
@@ -49,6 +50,29 @@ class AuthController extends Controller
         ]);
 
     }
+
+
+
+    public function loginAdmin(Request $request) {
+        $credentials = $request->only('email', 'password');
+        try {
+            if (!$token = auth()->guard('admins')->attempt($credentials)) {
+                return response()->json(['success' => false, 'error' => 'Some Error Message'], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['success' => false, 'error' => 'Failed to login, please try again.'], 500);
+        }
+        return $this->respondWithToken($token);
+    }
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'success' => true,
+            'access_token' => $token,
+            'token_type' => 'bearer',
+        ]);
+    }
+
 
     public function register(Request $request)
     {
@@ -179,7 +203,6 @@ class AuthController extends Controller
 
     }
 
-
     public function apply_verification_code(Request $request,$phone_number)
     {
         $check_code  = User::where([
@@ -266,6 +289,8 @@ class AuthController extends Controller
             ], 400);
         }
     }
+
+
     public function all_credit()
     {
         try {
