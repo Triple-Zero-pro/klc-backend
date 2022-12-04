@@ -42,7 +42,11 @@ class OrdersController extends Controller
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
-        $data_request = $request->post();
+        $data_request = $request->except(['image_front','image_back','image_ticket','image_passport']);
+        $data_request['image_front'] = $this->uploadImage($request,'image_front');
+        $data_request['image_back'] = $this->uploadImage($request,'image_back');
+        $data_request['image_ticket'] = $this->uploadImage($request,'image_ticket');
+        $data_request['image_passport'] = $this->uploadImage($request,'image_passport');
         $data_request['user_id'] = Auth::user()->id;
         try {
             $order = $this->orderRepository->store_order($data_request);
@@ -75,6 +79,18 @@ class OrdersController extends Controller
             ], 400);
         }
     }
+
+    protected function uploadImage(Request $request,$image_name)
+    {
+
+        if (!$request->hasFile($image_name))
+            return;
+
+        $file = $request->file($image_name);
+        return $file->store('uploads', 'public');
+
+    }
+
 
 
 }
