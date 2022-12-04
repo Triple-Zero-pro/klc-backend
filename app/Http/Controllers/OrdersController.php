@@ -66,7 +66,7 @@ class OrdersController extends Controller
             if (isset($orders) && count($orders) > 0)
                 return response()->json(['status' => 'success', 'data' => $orders]);
             else
-                return response()->json(['status' => 'success','data' => [], 'message' => 'Orders Not Found'], 404);
+                return response()->json(['status' => 'success','data' => [], 'message' => 'Orders Not Found']);
 
         } catch (Exception $e) {
             return response()->json([
