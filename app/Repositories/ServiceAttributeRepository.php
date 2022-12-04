@@ -25,17 +25,12 @@ class ServiceAttributeRepository extends BaseRepository
 
     public function store_serviceAttribute($data_request)
     {
-        return ServiceAttribute::where('service_id',$data_request['service_id'])->UpdateOrCreate([
-                'from' => $data_request['from'],
-                'to' => $data_request['to'],
-                'appointment_date' => $data_request['appointment_date'],
-                'appointment_time' => $data_request['appointment_time'],
-                'images' => $data_request['images'],
-                'gender' => $data_request['gender'],
-                'embassy' => $data_request['embassy'],
-                'select_service' => $data_request['select_service'],
-                'employee_status' => $data_request['employee_status'],
-            ]);
+        $service_attributes =  $this->model->where('service_id',$data_request['service_id'])->first();
+        if ($service_attributes)
+             return $service_attributes->update($data_request);
+
+        return ServiceAttribute::create($data_request);
+
 
     }
 
