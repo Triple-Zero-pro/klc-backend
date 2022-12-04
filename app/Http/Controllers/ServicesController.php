@@ -24,10 +24,13 @@ class ServicesController extends Controller
     {
         $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
         $category_id = 0;
+        $service_name = NULL;
         if ($request->category_id)
             $category_id = $request->category_id;
+        if ($request->service_name)
+            $service_name = $request->service_name;
         try {
-            $services = $this->serviceRepository->index($category_id);
+            $services = $this->serviceRepository->index($category_id,$service_name,$lang);
             if (isset($services) && count($services) > 0)
                 return response()->json(['status' => 'success', 'data' => $services]);
             else

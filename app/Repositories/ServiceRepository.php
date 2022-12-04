@@ -18,10 +18,14 @@ class ServiceRepository extends BaseRepository
      */
 
 
-    public function index($category_id)
+    public function index($category_id,$service_name = NULL,$lang= 'ar')
     {
         if ($category_id != 0)
             return $this->model->where('category_id',$category_id)->with(['category','serviceAttributes'])->paginate(15);
+
+        if ($service_name)
+            return $this->model->where('name_'.$lang.'','LIKE','%'.$service_name.'%')->get();
+
 
         return $this->model->with(['category','serviceAttributes'])->paginate(15);
     }
