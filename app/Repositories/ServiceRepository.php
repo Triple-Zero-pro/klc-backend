@@ -28,7 +28,7 @@ class ServiceRepository extends BaseRepository
 
     public function show($service_id)
     {
-        return $this->model->find($service_id);
+        return $this->model->find($service_id)->with(['category','serviceAttributes'])->get();
     }
 
 

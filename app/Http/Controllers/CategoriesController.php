@@ -33,7 +33,7 @@ class CategoriesController extends Controller
                 return response()->json([
                     'status' => 'success','data' => [],
                     'message' => 'Not Categories Found',
-                ], 404);
+                ]);
             }
         } catch (Exception $e) {
             return response()->json([
@@ -58,9 +58,9 @@ class CategoriesController extends Controller
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'data' => '',
+                    'data' => [],
                     'message' => 'Category ID Not  Found',
-                ], 404);
+                ]);
             }
         } catch (Exception $e) {
             return response()->json([

@@ -49,7 +49,7 @@ class ServicesController extends Controller
             if (isset($service))
                 return response()->json(['status' => 'success', 'data' => $service]);
             else
-                return response()->json(['status' => 'success','data' => '', 'message' => 'Not Services Found']);
+                return response()->json(['status' => 'success','data' => [], 'message' => 'Not Services Found']);
 
         } catch (Exception $e) {
             return response()->json([
@@ -64,13 +64,13 @@ class ServicesController extends Controller
 
         try {
             if (!$category_check = Category::find($category_id))
-                return response()->json(['status' => 'error', 'message' => 'Category ID Not Found',], 404);
+                return response()->json(['status' => 'error', 'message' => 'Category ID Not Found'], 404);
 
             $services = $this->serviceRepository->get_services_by_category($category_id);
             if (isset($services) && count($services) > 0)
                 return response()->json(['status' => 'success', 'data' => $services]);
             else
-                return response()->json(['status' => 'success', 'message' => 'Services Not Found'], 404);
+                return response()->json(['status' => 'success','data' => [] , 'message' => 'Services Not Found']);
 
         } catch (Exception $e) {
             return response()->json([
@@ -88,7 +88,7 @@ class ServicesController extends Controller
             if (isset($services) && count($services) > 0)
                 return response()->json(['status' => 'success', 'data' => $services]);
             else
-                return response()->json(['status' => 'success', 'data' => [] ,'message' => 'Services Not Found'], 404);
+                return response()->json(['status' => 'success', 'data' => [] ,'message' => 'Services Not Found']);
 
         } catch (Exception $e) {
             return response()->json([

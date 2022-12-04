@@ -193,7 +193,7 @@ class AuthController extends Controller
             $message = "Your Verification Code to Reset Password is " . $verification_code ."  ";
             $gateway = config('twilio');
             //Sms::driver($gateway)->sendSms($request->phone,$message);
-            return response()->json(['status' => 'success', 'message' => 'Code Sent  Successfully For Your Number', 'data' => '']);
+            return response()->json(['status' => 'success', 'message' => 'Code Sent  Successfully For Your Number', 'data' => []]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -226,7 +226,7 @@ class AuthController extends Controller
                 'password' =>  Hash::make($request->password),
                 'verification_code' =>  NULL,
             ])->save();
-            return response()->json(['status' => 'success', 'message' => 'Password Updated please login now', 'data' => '']);
+            return response()->json(['status' => 'success', 'message' => 'Password Updated please login now', 'data' => []]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -299,7 +299,7 @@ class AuthController extends Controller
             if (isset($credits) && count($credits) > 0)
                 return response()->json(['status' => 'success', 'data' => $credits]);
 
-            return response()->json(['status' => 'error','data' => '', 'message' => 'Not Credits Found',], 404);
+            return response()->json(['status' => 'error','data' => [], 'message' => 'Not Credits Found']);
 
         } catch (Exception $e) {
             return response()->json([

@@ -28,7 +28,7 @@ class OnboardsController extends Controller
             if (isset($onboards) && count($onboards) > 0)
                 return response()->json(['status' => 'success', 'data' => $onboards,]);
             else
-                return response()->json(['data' => '', 'message' => 'Not Onboards Found',], 404);
+                return response()->json(['data' => [], 'message' => 'Not Onboards Found']);
 
         } catch (Exception $e) {
             return response()->json([
@@ -52,9 +52,9 @@ class OnboardsController extends Controller
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'data' => '',
+                    'data' => [],
                     'message' => 'Onboard ID Not  Found',
-                ], 404);
+                ]);
             }
         } catch (Exception $e) {
             return response()->json([
@@ -76,9 +76,9 @@ class OnboardsController extends Controller
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'data' => '',
+                    'data' => [],
                     'message' => 'About US Not  Found',
-                ], 404);
+                ]);
             }
         } catch (Exception $e) {
             return response()->json([

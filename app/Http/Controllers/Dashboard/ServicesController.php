@@ -23,7 +23,7 @@ class ServicesController extends Controller
 
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
-        $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
+
         $category_id = 0;
         if ($request->category_id)
             $category_id = $request->category_id;
@@ -44,7 +44,6 @@ class ServicesController extends Controller
 
     public function show(Request $request,$service_id)
     {
-        $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
         try {
             $service = $this->serviceRepository->show($service_id);
             if (isset($service))
@@ -158,7 +157,7 @@ class ServicesController extends Controller
             if (isset($services) && count($services) > 0)
                 return response()->json(['status' => 'success', 'data' => $services]);
             else
-                return response()->json(['status' => 'success', 'message' => 'Services Not Found'], 404);
+                return response()->json(['status' => 'success', 'data' => [] ,'message' => 'Services Not Found']);
 
         } catch (Exception $e) {
             return response()->json([
@@ -175,7 +174,7 @@ class ServicesController extends Controller
             if (isset($services) && count($services) > 0)
                 return response()->json(['status' => 'success', 'data' => $services]);
             else
-                return response()->json(['status' => 'success', 'data' => [] ,'message' => 'Services Not Found'], 404);
+                return response()->json(['status' => 'success', 'data' => [] ,'message' => 'Services Not Found']);
 
         } catch (Exception $e) {
             return response()->json([
