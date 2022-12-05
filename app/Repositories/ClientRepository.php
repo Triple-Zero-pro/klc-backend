@@ -28,21 +28,6 @@ class ClientRepository extends BaseRepository
     }
 
 
-    public function store_client($data_request)
-    {
-        return $this->model->create($data_request);
-
-    }
-
-
-    public function update_client($data_request, $id)
-    {
-        $client = $this->model->find($id);
-        $client->update($data_request);
-        return $client;
-
-    }
-
 
     public function destroy_client($id)
     {

@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('payment_method')->default('cod');
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
             $table->enum('status', ['pending', 'processing', 'delivering', 'completed', 'cancelled', 'refunded'])->default('pending');
+            $table->boolean('verified')->default(0);
             $table->float('total')->default(0);
             $table->timestamps();
         });
