@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BannersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -70,6 +71,10 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     //////////////////////////// OnboardsController ///////////////////////////////
     Route::post('about-us', [OnboardsController::class, 'about_us_update']);
+
+    //////////////////////////// banners /////////////////////////////////
+    Route::resource('banners', BannersController::class)->except(['store','update','destroy']);
+
 });
 
 
@@ -106,6 +111,12 @@ Route::group(['middleware' => 'auth:admins','prefix' => 'admin/dashboard','as'=>
     //////////////////////////// OnboardsController ///////////////////////////////
     Route::resource('onboards', DashOnboardsController::class);
     Route::post('about-us', [DashOnboardsController::class, 'about_us_update']);
+
+
+    //////////////////////////// banners /////////////////////////////////
+    Route::resource('banners', BannersController::class);
+    Route::post('banners/{id}', [BannersController::class, 'update']);
+
 });
 
 

@@ -3,42 +3,33 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
-use App\Repositories\CategoryRepository as CategoryRepository;
+use App\Models\User;
+use App\Repositories\ClientRepository as ClientRepository;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CategoriesController extends Controller
+class ClientsController extends Controller
 {
-    public $categoryRepository;
+    public $clientRepository;
 
 
-    public function __construct(CategoryRepository $categoryRepository)
+    public function __construct(ClientRepository $clientRepository)
     {
-        $this->categoryRepository = $categoryRepository;
+        $this->clientRepository = $clientRepository;
     }
 
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
-            $categories = $this->categoryRepository->index();
-            if (isset($categories) && count($categories) > 0) {
-                return response()->json([
-                    'status' => 'success',
-                    'data' => $categories,
-                ]);
-            } else {
-                return response()->json([
-                    'status' => 'success','data' => [],
-                    'message' => 'Not Categories Found',
-                ], 404);
-            }
+            $clients = $this->clientRepository->index();
+            if (isset($clients) && count($clients) > 0)
+                return response()->json(['status' => 'success', 'data' => $clients]);
+            else
+                return response()->json(['status' => 'success','data' => [], 'message' => 'Not Categories Found']);
+
         } catch (Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Something wrong Please Try Again',
-            ], 400);
+            return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Again'], 400);
         }
     }
 
@@ -62,9 +53,9 @@ class CategoriesController extends Controller
         $data_request = $request->except('image');
         $data_request['image'] = $this->uploadImage($request);
         try {
-            $category = $this->categoryRepository->store_category($data_request);
-            if ($category)
-                return response()->json(['status' => 'success', 'message' => 'Category Created Successfully','data' => $category]);
+            $client = $this->clientRepository->store_client($data_request);
+            if ($client)
+                return response()->json(['status' => 'success', 'message' => 'Client Created Successfully','data' => $client]);
 
         } catch (Exception $e) {
             return response()->json([
@@ -78,21 +69,21 @@ class CategoriesController extends Controller
     {
 
     }
-    public function show(Request $request,$category_id): \Illuminate\Http\JsonResponse
+    public function show(Request $request,$client_id): \Illuminate\Http\JsonResponse
     {
         $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
         try {
-            $category = $this->categoryRepository->show($category_id);
-            if (isset($category)) {
+            $client = $this->clientRepository->show($client_id);
+            if (isset($client)) {
                 return response()->json([
                     'status' => 'success',
-                    'data' => $category,
+                    'data' => $client,
                 ]);
             } else {
                 return response()->json([
                     'status' => 'error',
                     'data' => '',
-                    'message' => 'Category ID Not  Found',
+                    'message' => 'Client ID Not  Found',
                 ], 404);
             }
         } catch (Exception $e) {
@@ -106,8 +97,8 @@ class CategoriesController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (!$category_check = $this->categoryRepository->show($id))
-            return response()->json(['status' => 'error', 'message' => 'Category ID Not Found',], 404);
+        if (!$client_check = $this->clientRepository->show($id))
+            return response()->json(['status' => 'error', 'message' => 'Client ID Not Found',], 404);
 
         $validator = Validator::make($request->all(), [
             'name_en' => "required|string|min:3|max:191",
@@ -121,9 +112,9 @@ class CategoriesController extends Controller
         $data_request = $request->except('image');
         $data_request['image'] = $this->uploadImage($request);
         try {
-            $category = $this->categoryRepository->update_category($data_request,$id);
-            if ($category)
-                return response()->json(['status' => 'success','message' => 'Category Updated Successfully', 'data' => $category]);
+            $client = $this->clientRepository->update_client($data_request,$id);
+            if ($client)
+                return response()->json(['status' => 'success','message' => 'Client Updated Successfully', 'data' => $client]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -135,11 +126,11 @@ class CategoriesController extends Controller
 
     public function destroy(Request $request,$id)
     {
-        if (!$category_check = $this->categoryRepository->show($id))
-            return response()->json(['status' => 'error', 'message' => 'Category ID Not Found',], 404);
+        if (!$client_check = $this->clientRepository->show($id))
+            return response()->json(['status' => 'error', 'message' => 'Client ID Not Found',], 404);
         try {
-            $category = $this->categoryRepository->destroy_category($id);
-            return response()->json(['status' => 'success', 'message' => 'Category Deleted Successfully']);
+            $client = $this->clientRepository->destroy_client($id);
+            return response()->json(['status' => 'success', 'message' => 'Client Deleted Successfully']);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',

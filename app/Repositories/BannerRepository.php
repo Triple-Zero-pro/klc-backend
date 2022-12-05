@@ -3,10 +3,12 @@
 
 namespace App\Repositories;
 
+use App\Models\Banner;
+use Illuminate\Support\Facades\Storage;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 
-class ClientRepository extends BaseRepository
+class BannerRepository extends BaseRepository
 {
 
     /**
@@ -28,35 +30,36 @@ class ClientRepository extends BaseRepository
     }
 
 
-    public function store_client($data_request)
+
+    public function store_banner($data_request)
     {
         return $this->model->create($data_request);
 
     }
 
 
-    public function update_client($data_request, $id)
+    public function update_banner($data_request, $id)
     {
-        $client = $this->model->find($id);
-        $client->update($data_request);
-        return $client;
+        $banner = $this->model->find($id);
+        $banner->update($data_request);
+        return $banner;
 
     }
 
 
-    public function destroy_client($id)
+    public function destroy_banner($id)
     {
-        $client = $this->model->find($id);
-        if ($client == NULL)
+        $banner = $this->model->find($id);
+        if ($banner == NULL)
             return false;
 
-        $client->delete();
+        $banner->delete();
     }
 
 
     function model(): string
     {
-        return "App\Models\User";
+        return "App\Models\Banner";
     }
 
 
