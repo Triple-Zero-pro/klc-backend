@@ -35,21 +35,14 @@ class ClientsController extends Controller
 
     public function show(Request $request,$client_id): \Illuminate\Http\JsonResponse
     {
-        $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
+
         try {
             $client = $this->clientRepository->show($client_id);
-            if (isset($client)) {
-                return response()->json([
-                    'status' => 'success',
-                    'data' => $client,
-                ]);
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'data' => '',
-                    'message' => 'Client ID Not  Found',
-                ], 404);
-            }
+            if (isset($client))
+                return response()->json(['status' => 'success', 'data' => $client]);
+            else
+                return response()->json(['status' => 'success', 'data' => [], 'message' => 'Client ID Not  Found']);
+
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -61,7 +54,7 @@ class ClientsController extends Controller
     public function destroy(Request $request,$id)
     {
         if (!$client_check = $this->clientRepository->show($id))
-            return response()->json(['status' => 'error', 'message' => 'Client ID Not Found',], 404);
+            return response()->json(['status' => 'error', 'message' => 'Client ID Not Found'], 404);
         try {
             $client = $this->clientRepository->destroy_client($id);
             return response()->json(['status' => 'success', 'message' => 'Client Deleted Successfully']);

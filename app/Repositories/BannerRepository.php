@@ -20,13 +20,13 @@ class BannerRepository extends BaseRepository
 
     public function index()
     {
-        return $this->model->all();
+        return $this->model->with('banner_type')->get();
     }
 
 
     public function show($id)
     {
-        return $this->model->find($id);
+        return $this->model->find($id)->with('banner_type')->get();
     }
 
 

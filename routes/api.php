@@ -9,6 +9,8 @@ use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\OnboardsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ServiceAttributesController;
+use App\Http\Controllers\Dashboard\ClientsController;
+use App\Http\Controllers\BannerTypesController;
 use App\Http\Controllers\Dashboard\CategoriesController as DashCategoriesController;
 use App\Http\Controllers\Dashboard\ServicesController as DashServicesController;
 use App\Http\Controllers\Dashboard\OnboardsController as DashOnboardsController;
@@ -75,8 +77,14 @@ Route::group(['middleware' => 'auth:api'], function () {
     //////////////////////////// banners /////////////////////////////////
     Route::resource('banners', BannersController::class)->except(['store','update','destroy']);
 
+    //////////////////////////// banners type /////////////////////////////////
+    Route::resource('bannerTypes', BannerTypesController::class)->except(['store','update','destroy']);
+
 });
 
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////// Dashboard ////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////// login admin /////////////////////////
 Route::post('loginAdmin',[AuthController::class,'loginAdmin']);
@@ -113,9 +121,19 @@ Route::group(['middleware' => 'auth:admins','prefix' => 'admin/dashboard','as'=>
     Route::post('about-us', [DashOnboardsController::class, 'about_us_update']);
 
 
+    //////////////////////////// banners type /////////////////////////////////
+    Route::resource('bannerTypes', BannerTypesController::class);
+    Route::post('bannerTypes/{id}', [BannerTypesController::class, 'update']);
+
     //////////////////////////// banners /////////////////////////////////
     Route::resource('banners', BannersController::class);
     Route::post('banners/{id}', [BannersController::class, 'update']);
+
+
+
+    //////////////////////////// clients /////////////////////////////////
+    Route::resource('clients', ClientsController::class);
+    Route::post('clients/{id}', [ClientsController::class, 'update']);
 
 });
 

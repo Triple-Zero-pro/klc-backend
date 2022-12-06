@@ -43,6 +43,7 @@ class BannersController extends Controller
         $validator = Validator::make($request->all(), [
             'image' => 'required',
             'target' => 'required',
+            'banner_type_id' => 'required',
             'status' => 'required|in:active,inactive',
         ]);
         if ($validator->fails())
@@ -87,6 +88,7 @@ class BannersController extends Controller
         $validator = Validator::make($request->all(), [
             'image' => 'required',
             'target' => 'required',
+            'banner_type_id' => 'required',
             'status' => 'required|in:active,inactive',
         ]);
         if ($validator->fails())

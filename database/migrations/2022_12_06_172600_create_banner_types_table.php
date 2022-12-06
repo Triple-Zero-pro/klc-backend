@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('banners', function (Blueprint $table) {
+        Schema::create('banner_types', function (Blueprint $table) {
             $table->id();
-            $table->string('target')->nullable();
-            $table->string('image')->nullable();
-            $table->enum('status',['active','inactive'])->default('active');
+            $table->string('name')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('banners');
+        Schema::dropIfExists('banner_types');
     }
 };
