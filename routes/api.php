@@ -11,7 +11,9 @@ use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\ServiceAttributesController;
 use App\Http\Controllers\Dashboard\ClientsController;
 use App\Http\Controllers\BannerTypesController;
+use App\Http\Controllers\AirportsController;
 use App\Http\Controllers\Dashboard\CategoriesController as DashCategoriesController;
+use App\Http\Controllers\Dashboard\AirportsController as DashAirportsController;
 use App\Http\Controllers\Dashboard\ServicesController as DashServicesController;
 use App\Http\Controllers\Dashboard\OnboardsController as DashOnboardsController;
 use App\Http\Controllers\Dashboard\OrdersController as DashOrdersController;
@@ -80,6 +82,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     //////////////////////////// banners type /////////////////////////////////
     Route::resource('bannerTypes', BannerTypesController::class)->except(['store','update','destroy']);
 
+    //////////////////////////// Airports /////////////////////////////////
+    Route::resource('airports', AirportsController::class)->except(['store','update','destroy']);
+
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -134,6 +139,13 @@ Route::group(['middleware' => 'auth:admins','prefix' => 'admin/dashboard','as'=>
     //////////////////////////// clients /////////////////////////////////
     Route::resource('clients', ClientsController::class);
     Route::post('clients/{id}', [ClientsController::class, 'update']);
+
+
+
+
+    //////////////////////////// Airports /////////////////////////////////
+    Route::resource('airports', DashAirportsController::class);
+    Route::post('airports/{id}', [DashAirportsController::class, 'update']);
 
 });
 
