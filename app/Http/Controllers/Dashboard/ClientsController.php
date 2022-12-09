@@ -26,14 +26,14 @@ class ClientsController extends Controller
             if (isset($clients) && count($clients) > 0)
                 return response()->json(['status' => 'success', 'data' => $clients]);
             else
-                return response()->json(['status' => 'success','data' => [], 'message' => 'Not Clients Found']);
+                return response()->json(['status' => 'success', 'data' => [], 'message' => 'Not Clients Found']);
 
         } catch (Exception $e) {
             return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Again'], 400);
         }
     }
 
-    public function show(Request $request,$client_id): \Illuminate\Http\JsonResponse
+    public function show(Request $request, $client_id): \Illuminate\Http\JsonResponse
     {
 
         try {
@@ -51,7 +51,37 @@ class ClientsController extends Controller
         }
     }
 
-    public function destroy(Request $request,$id)
+
+
+    public function update(Request $request, $id)
+    {
+        if (!$category_check = $this->clientRepository->show($id))
+            return response()->json(['status' => 'error', 'message' => 'Category ID Not Found',], 404);
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|min:6',
+            'image' => 'required',
+        ]);
+        if ($validator->fails())
+            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
+
+
+        $data_request = $request->except('image');
+        $data_request['image'] = $this->uploadImage($request);
+        try {
+            $category = $this->clientRepository->update_client($data_request, $id);
+            if ($category)
+                return response()->json(['status' => 'success', 'message' => 'Client Updated Successfully', 'data' => $category]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
+    public function destroy(Request $request, $id)
     {
         if (!$client_check = $this->clientRepository->show($id))
             return response()->json(['status' => 'error', 'message' => 'Client ID Not Found'], 404);

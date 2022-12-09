@@ -27,7 +27,13 @@ class ClientRepository extends BaseRepository
         return $this->model->find($id);
     }
 
+    public function update_client($data_request, $id)
+    {
+        $client = $this->model->find($id);
+        $client->update($data_request);
+        return $client;
 
+    }
 
     public function destroy_client($id)
     {
