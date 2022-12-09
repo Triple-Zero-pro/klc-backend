@@ -44,9 +44,10 @@ class ClientRepository extends BaseRepository
 
         $client->delete();
     }
+
     public function client_orders($client_id)
     {
-        return  Order::where('user_id',$client_id)->get();
+        return Order::where('user_id', $client_id)->get();
     }
 
 

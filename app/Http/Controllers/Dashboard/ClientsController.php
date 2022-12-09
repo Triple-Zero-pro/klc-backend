@@ -56,7 +56,7 @@ class ClientsController extends Controller
     public function update(Request $request, $id)
     {
         if (!$category_check = $this->clientRepository->show($id))
-            return response()->json(['status' => 'error', 'message' => 'Category ID Not Found',], 404);
+            return response()->json(['status' => 'error', 'message' => 'Client ID Not Found',], 404);
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -67,8 +67,10 @@ class ClientsController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
 
-        $data_request = $request->except('image');
-        $data_request['image'] = $this->uploadImage($request);
+        $data_request = $request->except(['image_front','image_back','image']);
+        $data_request['image_front'] = $this->uploadImage($request,'image_front');
+        $data_request['image_back'] = $this->uploadImage($request,'image_back');
+        $data_request['image_ticket'] = $this->uploadImage($request,'image');
         try {
             $category = $this->clientRepository->update_client($data_request, $id);
             if ($category)
@@ -111,12 +113,13 @@ class ClientsController extends Controller
         }
     }
 
-    protected function uploadImage(Request $request)
+    protected function uploadImage(Request $request,$image_name)
     {
-        if (!$request->hasFile('image'))
+
+        if (!$request->hasFile($image_name))
             return;
 
-        $file = $request->file('image');
+        $file = $request->file($image_name);
         return $file->store('uploads', 'public');
 
     }
