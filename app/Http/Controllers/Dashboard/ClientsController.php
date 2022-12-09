@@ -96,6 +96,21 @@ class ClientsController extends Controller
         }
     }
 
+
+    public function client_orders($client_id): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $orders = $this->clientRepository->client_orders($client_id);
+            if (isset($orders) && count($orders) > 0)
+                return response()->json(['status' => 'success', 'data' => $orders]);
+            else
+                return response()->json(['status' => 'success', 'data' => [], 'message' => 'Not Orders Found']);
+
+        } catch (Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Again'], 400);
+        }
+    }
+
     protected function uploadImage(Request $request)
     {
         if (!$request->hasFile('image'))

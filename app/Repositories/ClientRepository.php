@@ -3,6 +3,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Order;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 
@@ -42,6 +43,10 @@ class ClientRepository extends BaseRepository
             return false;
 
         $client->delete();
+    }
+    public function client_orders($client_id)
+    {
+        return  Order::where('user_id',$client_id)->get();
     }
 
 
