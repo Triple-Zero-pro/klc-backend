@@ -310,6 +310,49 @@ class AuthController extends Controller
     }
 
 
+    public function get_balance()
+    {
+        try {
+            $balance = User::where('id',Auth::user()->id)->first();
+            if (isset($balance))
+                return response()->json(['status' => 'success', 'data' => $balance['balance']]);
+
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
+    public function add_balance(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'amount' => 'required',
+        ]);
+        if ($validator->fails())
+            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
+
+        try {
+            $user = User::where('id',Auth::user()->id)->first();
+            if ($user)
+            {
+                $user->balance += $request->amount;
+                $user->save();
+                return response()->json(['status' => 'success','message' => 'Balance Added Successfully', 'data' => $user['balance']]);
+            }
+
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
+
     public function cancel_order($order_id)
     {
         $check_order = Order::where('id',$order_id)->where('user_id',Auth::user()->id)->first();

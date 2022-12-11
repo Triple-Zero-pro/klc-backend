@@ -48,6 +48,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('add-credit', 'add_credit');
     Route::get('delete-credit/{credit_id}', 'delete_credit');
     Route::get('all-credit', 'all_credit');
+    Route::get('get-balance', 'get_balance');
+    Route::post('add-balance', 'add_balance');
 });
 Route::group(['middleware' => 'auth:api'], function () {
     //////////////////////////// category ///////////////////////////////
