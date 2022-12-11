@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\BannersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -12,11 +11,13 @@ use App\Http\Controllers\ServiceAttributesController;
 use App\Http\Controllers\Dashboard\ClientsController;
 use App\Http\Controllers\BannerTypesController;
 use App\Http\Controllers\AirportsController;
+use App\Http\Controllers\BannersController;
 use App\Http\Controllers\Dashboard\CategoriesController as DashCategoriesController;
 use App\Http\Controllers\Dashboard\AirportsController as DashAirportsController;
 use App\Http\Controllers\Dashboard\ServicesController as DashServicesController;
 use App\Http\Controllers\Dashboard\OnboardsController as DashOnboardsController;
 use App\Http\Controllers\Dashboard\OrdersController as DashOrdersController;
+use App\Http\Controllers\Dashboard\HomeController;
 use App\Http\Controllers\Dashboard\ServiceAttributesController as DashServiceAttributesController;
 
 /*
@@ -96,6 +97,9 @@ Route::post('loginAdmin',[AuthController::class,'loginAdmin']);
 
 
 Route::group(['middleware' => 'auth:admins','prefix' => 'admin/dashboard','as'=> 'dashboard.'], function () {
+    //////////////////////////// Dashboard ///////////////////////////////
+    Route::get('home', [HomeController::class, 'index']);
+
     //////////////////////////// categories ///////////////////////////////
     Route::resource('categories', DashCategoriesController::class);
     Route::post('categories/{id}', [DashCategoriesController::class, 'update']);
