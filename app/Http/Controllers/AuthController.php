@@ -177,7 +177,7 @@ class AuthController extends Controller
     {
         $phone_check = User::where('phone',$request->phone)->first();
         if (!$phone_check)
-            return response()->json(['status' => 'error', 'message' => 'Phone Number Not Registered Check Phone Again',], 404);
+            return response()->json(['status' => 'error', 'message' => 'Phone Number Not Registered Check Phone Again'], 404);
 
         $validator = Validator::make($request->all(), [
             'phone' => 'required',
@@ -193,7 +193,7 @@ class AuthController extends Controller
             $message = "Your Verification Code to Reset Password is " . $verification_code ."  ";
             $gateway = config('twilio');
             //Sms::driver($gateway)->sendSms($request->phone,$message);
-            return response()->json(['status' => 'success', 'message' => 'Code Sent  Successfully For Your Number', 'data' => []]);
+            return response()->json(['status' => 'success', 'message' => $message, 'data' => $verification_code]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -212,21 +212,21 @@ class AuthController extends Controller
         if (!$check_code)
             return response()->json(['status' => 'error', 'message' => 'Phone Number Not Registered Check Phone Again',], 404);
 
-
+/*
         $validator = Validator::make($request->all(), [
             'verification_code' => 'required',
             'password' => 'required|string|min:6',
             ]);
 
         if ($validator->fails())
-            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
+            return response()->json(['status' => 'success', 'message' => 'Error Validation', 'errors' => $validator->errors()]);*/
 
         try {
-            $check_code->forceFill([
+           /* $check_code->forceFill([
                 'password' =>  Hash::make($request->password),
                 'verification_code' =>  NULL,
-            ])->save();
-            return response()->json(['status' => 'success', 'message' => 'Password Updated please login now', 'data' => []]);
+            ])->save();*/
+            return response()->json(['status' => 'success', 'message' => 'Verification Code Is Valid', 'data' => []]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
