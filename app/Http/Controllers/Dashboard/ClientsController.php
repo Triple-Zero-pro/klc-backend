@@ -22,8 +22,8 @@ class ClientsController extends Controller
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
-            $clients = $this->clientRepository->index();
-            if (isset($clients) && count($clients) > 0)
+            $clients = $this->clientRepository->index($request);
+            if (isset($clients))
                 return response()->json(['status' => 'success', 'data' => $clients]);
             else
                 return response()->json(['status' => 'success', 'data' => [], 'message' => 'Not Clients Found']);

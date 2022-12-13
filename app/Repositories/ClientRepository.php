@@ -17,9 +17,20 @@ class ClientRepository extends BaseRepository
      */
 
 
-    public function index()
+    public function index($request)
     {
-        return $this->model->all();
+        $clients =  $this->model->where('status','<>',NULL);
+        if ($request['name']) {
+            $clients->where('name', 'LIKE','%'. $request['name'].'%');
+        }
+        if ($request['email']) {
+            $clients->where('email', 'LIKE','%'. $request['email'].'%');
+        }
+        if ($request['status']) {
+            $clients->where('status', 'LIKE','%'. $request['status'].'%');
+        }
+        return $clients->paginate(10);
+
     }
 
 
