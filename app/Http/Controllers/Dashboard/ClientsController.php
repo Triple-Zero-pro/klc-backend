@@ -111,6 +111,22 @@ class ClientsController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Again'], 400);
         }
     }
+    public function client_banned($client_id)
+    {
+        if (!$client_check = $this->clientRepository->show($client_id))
+            return response()->json(['status' => 'error', 'message' => 'Client ID Not Found'], 404);
+
+        try {
+            $order = $this->clientRepository->client_banned($client_id);
+            if ($order)
+                return response()->json(['status' => 'success', 'message' => 'Client Banned Successfully', 'data' => $order]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
 
     protected function uploadImage(Request $request,$image_name)
     {

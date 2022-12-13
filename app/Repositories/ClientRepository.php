@@ -58,9 +58,16 @@ class ClientRepository extends BaseRepository
 
     public function client_orders($client_id)
     {
-        return Order::where('user_id', $client_id)->get();
+        return Order::where('user_id', $client_id)->paginate();
     }
+    public function client_banned($client_id)
+    {
+        $client = $this->model->find($client_id);
+        $client->status = 'banned';
+        $client->save();
+        return $client;
 
+    }
 
     function model(): string
     {
