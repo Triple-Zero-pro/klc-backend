@@ -331,7 +331,7 @@ class AuthController extends Controller
             if (isset($credits) && count($credits) > 0)
                 return response()->json(['status' => 'success', 'data' => $credits]);
 
-            return response()->json(['status' => 'error','data' => [], 'message' => 'Not Credits Found']);
+            return response()->json(['status' => 'status','data' => [], 'message' => 'Not Credits Found']);
 
         } catch (Exception $e) {
             return response()->json([
