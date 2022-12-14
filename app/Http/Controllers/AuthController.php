@@ -19,7 +19,7 @@ class AuthController extends Controller
     //
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register','loginAdmin','apply_verification_code', 'reset_password','send_verification_code']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register','loginAdmin','apply_verification_code', 'update_password','send_verification_code']]);
     }
 
     public function login(Request $request)
@@ -227,6 +227,38 @@ class AuthController extends Controller
                 'verification_code' =>  NULL,
             ])->save();*/
             return response()->json(['status' => 'success', 'message' => 'Verification Code Is Valid', 'data' => []]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+
+    }
+    public function update_password(Request $request,$phone_number)
+    {
+        $check_code  = User::where([
+            'phone' => $phone_number,
+            'verification_code' => $request->verification_code,
+        ])->first();
+        if (!$check_code)
+            return response()->json(['status' => 'error', 'message' => 'Phone Number Not Registered Check Phone Again',], 404);
+
+
+        $validator = Validator::make($request->all(), [
+            'verification_code' => 'required',
+            'password' => 'required|string|min:6',
+            ]);
+
+        if ($validator->fails())
+            return response()->json(['status' => 'success', 'message' => 'Error Validation', 'errors' => $validator->errors()]);
+
+        try {
+            $check_code->forceFill([
+                'password' =>  Hash::make($request->password),
+                'verification_code' =>  NULL,
+            ])->save();
+            return response()->json(['status' => 'success', 'message' => 'Password Updated Successfully', 'data' => $check_code]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',

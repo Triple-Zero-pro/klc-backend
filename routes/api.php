@@ -44,7 +44,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('profile', 'update');
     Route::post('send-verification-code', 'send_verification_code');
     Route::post('apply-verification-code/{phone_number}', 'apply_verification_code');
-    Route::post('reset-password/{phone_number}', 'reset_password');
+    Route::post('update-password/{phone_number}', 'update_password');
     Route::post('add-credit', 'add_credit');
     Route::get('delete-credit/{credit_id}', 'delete_credit');
     Route::get('all-credit', 'all_credit');
