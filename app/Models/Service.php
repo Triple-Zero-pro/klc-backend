@@ -19,7 +19,7 @@ class Service extends Model
     {
         if(Auth::guard('api')->check()){
             static::addGlobalScope('query_data_service', function (Builder $builder) {
-                $builder->select(['id','name_'.app()->getLocale() .' as name','description_'.app()->getLocale() .' as description','terms_conditions_'.app()->getLocale() .' as terms_conditions' ,'image','price','status']);
+                $builder->select(['id','name_'.app()->getLocale() .' as name','description_'.app()->getLocale() .' as description','terms_conditions_'.app()->getLocale() .' as terms_conditions' ,'image','category_id','price','status']);
             });
         }
     }
