@@ -33,5 +33,9 @@ class Order extends Model
             'name' => 'Airport Name'
         ]);
     }
+    public function driver(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Driver::class);
+    }
 
 }

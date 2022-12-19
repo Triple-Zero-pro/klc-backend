@@ -19,6 +19,7 @@ use App\Http\Controllers\Dashboard\OnboardsController as DashOnboardsController;
 use App\Http\Controllers\Dashboard\OrdersController as DashOrdersController;
 use App\Http\Controllers\Dashboard\HomeController;
 use App\Http\Controllers\Dashboard\ServiceAttributesController as DashServiceAttributesController;
+use App\Http\Controllers\Driver\AuthController as DriverAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,24 +54,24 @@ Route::controller(AuthController::class)->group(function () {
 });
 Route::group(['middleware' => 'auth:api'], function () {
     //////////////////////////// category ///////////////////////////////
-    Route::resource('categories', CategoriesController::class)->except(['store','update','destroy']);
+    Route::resource('categories', CategoriesController::class)->except(['store', 'update', 'destroy']);
 
 
     //////////////////////////// service ///////////////////////////////
-    Route::resource('services', ServicesController::class)->except(['store','update','destroy']);
+    Route::resource('services', ServicesController::class)->except(['store', 'update', 'destroy']);
     Route::post('services/{id}', [ServicesController::class, 'update']);
     Route::get('get_services_by_category/{category_id}', [ServicesController::class, 'get_services_by_category']);
     Route::get('get_services_by_name/{service_name}', [ServicesController::class, 'get_services_by_name']);
 
 
     //////////////////////////// service-attributes ///////////////////////////////
-    Route::get('service-attributes/{service_id}', [ServiceAttributesController::class,'index']);
-    Route::post('service-attributes/{service_id}', [ServiceAttributesController::class,'store']);
-    Route::delete('service-attributes/{service_id}', [ServiceAttributesController::class,'destroy']);
+    Route::get('service-attributes/{service_id}', [ServiceAttributesController::class, 'index']);
+    Route::post('service-attributes/{service_id}', [ServiceAttributesController::class, 'store']);
+    Route::delete('service-attributes/{service_id}', [ServiceAttributesController::class, 'destroy']);
 
 
     //////////////////////////// orders ///////////////////////////////
-    Route::resource('orders', OrdersController::class)->except(['update','destroy','index','show']);
+    Route::resource('orders', OrdersController::class)->except(['update', 'destroy', 'index', 'show']);
     Route::get('user/orders', [OrdersController::class, 'get_orders_by_user_id']);
     Route::post('user/cancel-order/{order_id}', [AuthController::class, 'cancel_order']);
     Route::post('orders/update-status/{order_id}', [OrdersController::class, 'update_status']);
@@ -80,13 +81,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('about-us', [OnboardsController::class, 'about_us_update']);
 
     //////////////////////////// banners /////////////////////////////////
-    Route::resource('banners', BannersController::class)->except(['store','update','destroy']);
+    Route::resource('banners', BannersController::class)->except(['store', 'update', 'destroy']);
 
     //////////////////////////// banners type /////////////////////////////////
-    Route::resource('bannerTypes', BannerTypesController::class)->except(['store','update','destroy']);
+    Route::resource('bannerTypes', BannerTypesController::class)->except(['store', 'update', 'destroy']);
 
     //////////////////////////// Airports /////////////////////////////////
-    Route::resource('airports', AirportsController::class)->except(['store','update','destroy']);
+    Route::resource('airports', AirportsController::class)->except(['store', 'update', 'destroy']);
 
 });
 
@@ -95,10 +96,10 @@ Route::group(['middleware' => 'auth:api'], function () {
 ////////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////// login admin /////////////////////////
-Route::post('loginAdmin',[AuthController::class,'loginAdmin']);
+Route::post('loginAdmin', [AuthController::class, 'loginAdmin']);
 
 
-Route::group(['middleware' => 'auth:admins','prefix' => 'admin/dashboard','as'=> 'dashboard.'], function () {
+Route::group(['middleware' => 'auth:admins', 'prefix' => 'admin/dashboard', 'as' => 'dashboard.'], function () {
     //////////////////////////// Dashboard ///////////////////////////////
     Route::get('home', [HomeController::class, 'index']);
 
@@ -115,9 +116,9 @@ Route::group(['middleware' => 'auth:admins','prefix' => 'admin/dashboard','as'=>
 
 
     //////////////////////////// service-attributes ///////////////////////////////
-    Route::get('service-attributes/{service_id}', [DashServiceAttributesController::class,'index']);
-    Route::post('service-attributes/{service_id}', [DashServiceAttributesController::class,'store']);
-    Route::delete('service-attributes/{service_id}', [DashServiceAttributesController::class,'destroy']);
+    Route::get('service-attributes/{service_id}', [DashServiceAttributesController::class, 'index']);
+    Route::post('service-attributes/{service_id}', [DashServiceAttributesController::class, 'store']);
+    Route::delete('service-attributes/{service_id}', [DashServiceAttributesController::class, 'destroy']);
 
 
     //////////////////////////// orders ///////////////////////////////
@@ -141,14 +142,11 @@ Route::group(['middleware' => 'auth:admins','prefix' => 'admin/dashboard','as'=>
     Route::post('banners/{id}', [BannersController::class, 'update']);
 
 
-
     //////////////////////////// clients /////////////////////////////////
     Route::resource('clients', ClientsController::class);
     Route::post('clients/{id}', [ClientsController::class, 'update']);
     Route::get('client_orders/{client_id}', [ClientsController::class, 'client_orders']);
     Route::get('client-banned/{client_id}', [ClientsController::class, 'client_banned']);
-
-
 
 
     //////////////////////////// Airports /////////////////////////////////
@@ -157,8 +155,24 @@ Route::group(['middleware' => 'auth:admins','prefix' => 'admin/dashboard','as'=>
 
 });
 
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////// Drivers ////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+Route::group(['prefix' => 'driver', 'as' => 'drivers.'], function () {
+    Route::post('login', [DriverAuthController::class, 'login']);
+    Route::post('register', [DriverAuthController::class, 'register']);
+    Route::post('logout', [DriverAuthController::class, 'logout']);
+    Route::post('refresh', [DriverAuthController::class, 'refresh']);
+    Route::get('profile', [DriverAuthController::class, 'profile']);
+    Route::post('profile', [DriverAuthController::class, 'update']);
+    Route::get('orders', [DriverAuthController::class, 'get_orders_by_user_id']);
+    Route::post('send-verification-code', [DriverAuthController::class, 'send_verification_code']);
+    Route::post('apply-verification-code/{phone_number}', [DriverAuthController::class, 'apply_verification_code']);
+    Route::post('update-password/{phone_number}', [DriverAuthController::class, 'update_password']);
+});
+
 
 ///////////////////////////// public routes //////////////////////////////
 Route::get('about-us', [OnboardsController::class, 'about_us']);
 //////////////////////////// onboards ///////////////////////////////////
-Route::resource('onboards', OnboardsController::class)->except(['store','update','destroy']);
+Route::resource('onboards', OnboardsController::class)->except(['store', 'update', 'destroy']);
