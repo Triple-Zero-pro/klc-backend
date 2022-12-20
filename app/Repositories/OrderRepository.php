@@ -25,7 +25,7 @@ class OrderRepository extends BaseRepository
 
     public function show($order_id)
     {
-        return $this->model->find($order_id);
+        return $this->model->where('id',$order_id)->with(['user','service'])->first();
     }
 
 

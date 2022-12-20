@@ -222,7 +222,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'verification_code' => 'required',
             'password' => 'required|string|min:6',
-            ]);
+        ]);
 
         if ($validator->fails())
             return response()->json(['status' => 'success', 'message' => 'Error Validation', 'errors' => $validator->errors()]);
