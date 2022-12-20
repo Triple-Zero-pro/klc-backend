@@ -69,7 +69,7 @@ class AuthController extends Controller
         $driver['token'] = $token;
         return response()->json([
             'status' => 'success',
-            'message' => 'User created successfully',
+            'message' => 'Driver created successfully',
             'data' => $driver,
             'authorisation' => [
                 'token' => $token,
@@ -130,7 +130,7 @@ class AuthController extends Controller
                 'password' => (isset($request->password) && $request->password != NULL)  ? Hash::make($request->password) : Auth::user()->getAuthPassword(),
             ]);
             if ($user)
-                return response()->json(['status' => 'success','message' => 'User Updated Successfully', 'data' => Auth::user()]);
+                return response()->json(['status' => 'success','message' => 'Driver Updated Successfully', 'data' => Auth::user()]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -211,7 +211,7 @@ class AuthController extends Controller
 
     public function update_password(Request $request,$phone_number)
     {
-        $check_code  = User::where([
+        $check_code  = Driver::where([
             'phone' => $phone_number,
             'verification_code' => $request->verification_code,
         ])->first();
