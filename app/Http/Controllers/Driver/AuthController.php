@@ -29,10 +29,13 @@ class AuthController extends Controller
             if (!$token = auth()->guard('drivers')->attempt($credentials)) {
                 return response()->json(['success' => false, 'error' => 'Some Error Message'], 401);
             }
+            $user = auth()->guard('drivers')->user();
+            $user['token'] = $token;
+            return response()->json(['status' => 'success', 'data' => $user, 'authorisation' => ['token' => $token, 'type' => 'bearer']]);
         } catch (JWTException $e) {
             return response()->json(['success' => false, 'error' => 'Failed to login, please try again.'], 500);
         }
-        return $this->respondWithToken($token);
+
 
     }
 
@@ -50,7 +53,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'password' => 'required|string|min:6',
-            'phone' => 'required|string|min:6|unique:users',
+            'phone' => 'required|string|min:6|unique:drivers',
         ]);
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
