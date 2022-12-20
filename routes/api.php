@@ -166,6 +166,9 @@ Route::group(['prefix' => 'driver', 'as' => 'drivers.'], function () {
     Route::get('profile', [DriverAuthController::class, 'profile']);
     Route::post('profile', [DriverAuthController::class, 'update']);
     Route::get('orders', [DriverAuthController::class, 'get_orders_by_user_id']);
+    Route::get('orders/{driver_status}', [DriverAuthController::class, 'get_orders_by_driver_status']);
+    Route::post('orders/accepted/{order_id}', [DriverAuthController::class, 'accepted']);
+    Route::post('orders/refused/{order_id}', [DriverAuthController::class, 'refused']);
     Route::post('send-verification-code', [DriverAuthController::class, 'send_verification_code']);
     Route::post('apply-verification-code/{phone_number}', [DriverAuthController::class, 'apply_verification_code']);
     Route::post('update-password/{phone_number}', [DriverAuthController::class, 'update_password']);

@@ -142,15 +142,61 @@ class AuthController extends Controller
 
     public function get_orders_by_user_id()
     {
-
         try {
-
             $orders = Order::where('driver_id', Auth::user()->id)->get();
             if (isset($orders) && count($orders) > 0)
                 return response()->json(['status' => 'success', 'data' => $orders]);
             else
                 return response()->json(['status' => 'success','data' => [], 'message' => 'Orders Not Found']);
 
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+    public function get_orders_by_driver_status($driver_status)
+    {
+        try {
+            $orders = Order::where('driver_id', Auth::user()->id)->where('driver_status', $driver_status)->get();
+            if (isset($orders) && count($orders) > 0)
+                return response()->json(['status' => 'success', 'data' => $orders]);
+            else
+                return response()->json(['status' => 'success','data' => [], 'message' => 'Orders Not Found']);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+    public function accepted(Request $request, $id)
+    {
+        if (!$order_check = Order::where('id',$id)->where('driver_id', Auth::user()->id)->first())
+            return response()->json(['status' => 'error', 'message' => 'Order ID Not Found',], 404);
+
+        try {
+            $order_check->driver_status = 'accepted';
+            if ($order_check->save())
+                return response()->json(['status' => 'success', 'message' => 'Order Updated Successfully', 'data' => $order_check]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+    public function refused(Request $request, $id)
+    {
+        if (!$order_check = Order::where('id',$id)->where('driver_id', Auth::user()->id)->first())
+            return response()->json(['status' => 'error', 'message' => 'Order ID Not Found',], 404);
+
+        try {
+            $order_check->driver_status = 'refused';
+            if ($order_check->save())
+                return response()->json(['status' => 'success', 'message' => 'Order Updated Successfully', 'data' => $order_check]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
