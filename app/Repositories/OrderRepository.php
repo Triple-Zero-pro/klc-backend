@@ -20,12 +20,12 @@ class OrderRepository extends BaseRepository
 
     public function index()
     {
-        return $this->model->with(['user','service'])->paginate(15);
+        return $this->model->with(['user','service','airport'])->paginate(15);
     }
 
     public function show($order_id)
     {
-        return $this->model->where('id',$order_id)->with(['user','service'])->first();
+        return $this->model->where('id',$order_id)->with(['user','service','airport'])->first();
     }
 
 
@@ -65,7 +65,7 @@ class OrderRepository extends BaseRepository
 
     public function get_orders_by_user_id()
     {
-        return $this->model->where('user_id', Auth::user()->id)->with('service')->get();
+        return $this->model->where('user_id', Auth::user()->id)->with(['service','airport'])->get();
     }
 
 
