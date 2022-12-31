@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        Schema::table('drivers', function (Blueprint $table) {
             //
-          $table->enum('driver_status',['accepted','refused','pending','servant_delivered','servant_delivering'])->default('pending')->after('driver_id');
+            $table->string('lat')->nullable()->after('status');
+            $table->string('long')->nullable()->after('lat');
         });
     }
 
@@ -26,9 +27,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        Schema::table('drivers', function (Blueprint $table) {
             //
-            $table->dropColumn('driver_status');
+            $table->dropColumn('lat');
+            $table->dropColumn('long');
         });
     }
 };

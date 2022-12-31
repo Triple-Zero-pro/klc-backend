@@ -19,7 +19,7 @@ class AuthController extends Controller
     //
     public function __construct()
     {
-        $this->middleware('auth:drivers', ['except' => ['login', 'register','apply_verification_code', 'update_password','send_verification_code']]);
+        $this->middleware('auth:drivers', ['except' => ['login', 'register', 'apply_verification_code', 'update_password', 'send_verification_code']]);
     }
 
     public function login(Request $request)
@@ -104,7 +104,7 @@ class AuthController extends Controller
         try {
             $driver = Auth::user();
             if ($driver)
-                return response()->json(['status' => 'success','message' => 'Driver Profile', 'data' => $driver]);
+                return response()->json(['status' => 'success', 'message' => 'Driver Profile', 'data' => $driver]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -122,15 +122,67 @@ class AuthController extends Controller
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
+        $request->image = $this->uploadImage($request);
         try {
             $user = Auth::user()->update([
                 'name' => $request->name,
-                'email' => (isset($request->email) && $request->email != NULL)  ? $request->email : Auth::user()->email,
-                'phone' => (isset($request->phone) && $request->phone != NULL)  ? $request->phone : Auth::user()->phone,
-                'password' => (isset($request->password) && $request->password != NULL)  ? Hash::make($request->password) : Auth::user()->getAuthPassword(),
+                'image' => $request->image,
+                'email' => (isset($request->email) && $request->email != NULL) ? $request->email : Auth::user()->email,
+                'phone' => (isset($request->phone) && $request->phone != NULL) ? $request->phone : Auth::user()->phone,
+                'password' => (isset($request->password) && $request->password != NULL) ? Hash::make($request->password) : Auth::user()->getAuthPassword(),
             ]);
             if ($user)
-                return response()->json(['status' => 'success','message' => 'Driver Updated Successfully', 'data' => Auth::user()]);
+                return response()->json(['status' => 'success', 'message' => 'Driver Updated Successfully', 'data' => Auth::user()]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
+    public function update_status(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|in:active,inactive',
+        ]);
+        if ($validator->fails())
+            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
+
+        try {
+            $driver =  Auth::user();
+            $driver= $driver->update([
+                'status' => $request->status
+            ]);
+            $driver =  Auth::user();
+            if ($driver)
+                return response()->json(['status' => 'success', 'message' => 'Driver Status Updated Successfully', 'data' => $driver]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
+    public function update_location(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'lat' => 'required',
+            'long' => 'required',
+        ]);
+        if ($validator->fails())
+            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
+
+        try {
+            $driver =  Auth::user();
+            $driver= $driver->update([
+                'lat' => $request->lat,
+                'long' => $request->long
+            ]);
+            $driver =  Auth::user();
+            if ($driver)
+                return response()->json(['status' => 'success', 'message' => 'Driver Location Updated Successfully', 'data' => $driver]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -147,7 +199,7 @@ class AuthController extends Controller
             if (isset($orders) && count($orders) > 0)
                 return response()->json(['status' => 'success', 'data' => $orders]);
             else
-                return response()->json(['status' => 'success','data' => [], 'message' => 'Orders Not Found']);
+                return response()->json(['status' => 'success', 'data' => [], 'message' => 'Orders Not Found']);
 
         } catch (Exception $e) {
             return response()->json([
@@ -163,7 +215,7 @@ class AuthController extends Controller
             if (isset($orders) && count($orders) > 0)
                 return response()->json(['status' => 'success', 'data' => $orders]);
             else
-                return response()->json(['status' => 'success','data' => [], 'message' => 'Orders Not Found']);
+                return response()->json(['status' => 'success', 'data' => [], 'message' => 'Orders Not Found']);
 
         } catch (Exception $e) {
             return response()->json([
@@ -172,15 +224,17 @@ class AuthController extends Controller
             ], 400);
         }
     }
+
     public function accepted(Request $request, $id)
     {
-        if (!$order_check = Order::where('id',$id)->where('driver_id', Auth::user()->id)->first())
+        if (!$order_check = Order::where('id', $id)->where('driver_id', Auth::user()->id)->first())
             return response()->json(['status' => 'error', 'message' => 'Order ID Not Found',], 404);
 
         try {
+            $order = $order_check;
             $order_check->driver_status = 'accepted';
             if ($order_check->save())
-                return response()->json(['status' => 'success', 'message' => 'Order Updated Successfully', 'data' => $order_check]);
+                return response()->json(['status' => 'success', 'message' => 'Order Updated Successfully', 'data' => $order]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -188,15 +242,52 @@ class AuthController extends Controller
             ], 400);
         }
     }
+
     public function refused(Request $request, $id)
     {
-        if (!$order_check = Order::where('id',$id)->where('driver_id', Auth::user()->id)->first())
+        if (!$order_check = Order::where('id', $id)->where('driver_id', Auth::user()->id)->first())
             return response()->json(['status' => 'error', 'message' => 'Order ID Not Found',], 404);
 
         try {
+            $order = $order_check;
             $order_check->driver_status = 'refused';
             if ($order_check->save())
-                return response()->json(['status' => 'success', 'message' => 'Order Updated Successfully', 'data' => $order_check]);
+                return response()->json(['status' => 'success', 'message' => 'Order Updated Successfully', 'data' => $order]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+    public function servant_delivered(Request $request, $id)
+    {
+        if (!$order_check = Order::where('id', $id)->where('driver_id', Auth::user()->id)->first())
+            return response()->json(['status' => 'error', 'message' => 'Order ID Not Found',], 404);
+
+        try {
+            $order = $order_check;
+            $order_check->driver_status = 'servant_delivered';
+            if ($order_check->save())
+                return response()->json(['status' => 'success', 'message' => 'Order Updated Successfully', 'data' => $order]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
+    public function servant_delivering(Request $request, $id)
+    {
+        if (!$order_check = Order::where('id', $id)->where('driver_id', Auth::user()->id)->first())
+            return response()->json(['status' => 'error', 'message' => 'Order ID Not Found',], 404);
+
+        try {
+            $order = $order_check;
+            $order_check->driver_status = 'servant_delivering';
+            if ($order_check->save())
+                return response()->json(['status' => 'success', 'message' => 'Order Updated Successfully', 'data' => $order]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -207,7 +298,7 @@ class AuthController extends Controller
 
     public function send_verification_code(Request $request)
     {
-        $phone_check = Driver::where('phone',$request->phone)->first();
+        $phone_check = Driver::where('phone', $request->phone)->first();
         if (!$phone_check)
             return response()->json(['status' => 'error', 'message' => 'Phone Number Not Registered Check Phone Again'], 404);
 
@@ -222,7 +313,7 @@ class AuthController extends Controller
             $phone_check->forceFill([
                 'verification_code' => $verification_code
             ])->save();
-            $message = "Your Verification Code to Reset Password is " . $verification_code ."  ";
+            $message = "Your Verification Code to Reset Password is " . $verification_code . "  ";
             $gateway = config('twilio');
             //Sms::driver($gateway)->sendSms($request->phone,$message);
             return response()->json(['status' => 'success', 'message' => $message, 'data' => $verification_code]);
@@ -235,9 +326,9 @@ class AuthController extends Controller
 
     }
 
-    public function apply_verification_code(Request $request,$phone_number)
+    public function apply_verification_code(Request $request, $phone_number)
     {
-        $check_code  = Driver::where([
+        $check_code = Driver::where([
             'phone' => $phone_number,
             'verification_code' => $request->verification_code,
         ])->first();
@@ -255,9 +346,9 @@ class AuthController extends Controller
 
     }
 
-    public function update_password(Request $request,$phone_number)
+    public function update_password(Request $request, $phone_number)
     {
-        $check_code  = Driver::where([
+        $check_code = Driver::where([
             'phone' => $phone_number,
             'verification_code' => $request->verification_code,
         ])->first();
@@ -275,8 +366,8 @@ class AuthController extends Controller
 
         try {
             $check_code->forceFill([
-                'password' =>  Hash::make($request->password),
-                'verification_code' =>  NULL,
+                'password' => Hash::make($request->password),
+                'verification_code' => NULL,
             ])->save();
             return response()->json(['status' => 'success', 'message' => 'Password Updated Successfully', 'data' => $check_code]);
         } catch (Exception $e) {
@@ -285,6 +376,16 @@ class AuthController extends Controller
                 'message' => 'Something wrong Please Try Again',
             ], 400);
         }
+
+    }
+
+    protected function uploadImage(Request $request)
+    {
+        if (!$request->hasFile('image'))
+            return;
+
+        $file = $request->file('image');
+        return $file->store('uploads', 'public');
 
     }
 
