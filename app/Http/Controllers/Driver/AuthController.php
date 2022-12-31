@@ -195,7 +195,7 @@ class AuthController extends Controller
     public function get_orders_by_user_id()
     {
         try {
-            $orders = Order::where('driver_id', Auth::user()->id)->get();
+            $orders = Order::where('driver_id', Auth::user()->id)->with('airport')->get();
             if (isset($orders) && count($orders) > 0)
                 return response()->json(['status' => 'success', 'data' => $orders]);
             else
