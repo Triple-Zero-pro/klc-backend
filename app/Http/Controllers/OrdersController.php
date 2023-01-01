@@ -5,19 +5,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Repositories\OrderRepository as OrderRepository;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-
+use App\Http\Controllers\PayController as PayController;
 class OrdersController extends Controller
 {
     public $orderRepository;
+    public $payController;
 
-
-    public function __construct(OrderRepository $orderRepository)
+    public function __construct(OrderRepository $orderRepository, PayController $payController)
     {
+        $this->payController = $payController;
         $this->orderRepository = $orderRepository;
     }
 
@@ -50,7 +52,10 @@ class OrdersController extends Controller
         $data_request['image_passport'] = $this->uploadImage($request,'image_passport');
         $data_request['user_id'] = Auth::user()->id;
         try {
+            $total_amount =$request->total;
             $order = $this->orderRepository->store_order($data_request);
+            $payment_method = $this->payController->payOrder($total_amount);
+            $order['redirect'] = $payment_method;
             if ($order)
                 return response()->json(['status' => 'success', 'message' => 'Order Created Successfully', 'data' => $order]);
 
@@ -60,6 +65,21 @@ class OrdersController extends Controller
                 'message' => 'Something wrong Please Try Again',
             ], 400);
         }
+    }
+    public function confirmPay($order_id)
+    {
+        $order = Order::find($order_id);
+        if (!$order_id)
+            return response()->json(['status' => 'error', 'message' => 'order not Found']);
+
+
+        $confirmPay =  Payment::where('order_id',$order_id)->first();
+        if (!$confirmPay)
+            return response()->json(['status' => 'error', 'message' => 'order not Found']);
+
+        $confirmPay->status = 'completed';
+        $confirmPay->save();
+        return response()->json(['status' => 'success', 'message' => 'Payment Order Completed','data'=>$order]);
     }
 
     public function get_orders_by_user_id()

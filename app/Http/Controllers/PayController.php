@@ -22,38 +22,26 @@ class PayController extends Controller
         $this->fatoorahServices = $fatoorahServices;
     }
 
-    public function index_pay()
+
+    public function payOrder($total_amount,$order_id = 0)
     {
-        $Beneficiarys = Buyer::where('State', '=', 1)->get();
-        return response()->view('money.create', ['Beneficiarys' => $Beneficiarys]);
-    }
 
-
-    public function payOrder(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'paymentCase' => 'required|numeric',
-            'paymentCase.required' => 'حقل مبلغ الدفع مطلوب',
-            'paymentCase.numeric' => 'حقل مبلغ الدفع يقبل الأرقام فقط',
-        ]);
-
-        if ($validator->fails())
-            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
+        if ($total_amount == 0)
+            return response()->json(['status' => 'error', 'message' => 'Error Validation'], 406);
 
 
         $rand = rand(100000000000, 999999999999);
 
         $auth_data_user_credit = Auth::user();
 
-        $data_user_credit = Buyer::where('id', $auth_data_user_credit->id)->first();
+        $data_user_credit = User::where('id', $auth_data_user_credit->id)->first();
 
         $companyname = $data_user_credit->name;
         $phonenumber = $data_user_credit->phone;
         $email = $data_user_credit->email;
 
 
-        $money = $request->get('paymentCase');
-        $order_id = $request->get('order_id');
+        $money = $total_amount;
         $paymentCase = $money + 0.250;
 
         $user_id = $data_user_credit->id;
@@ -70,9 +58,9 @@ class PayController extends Controller
             ],
             "Do_MerchDtl" => [
                 "BKY_PRDENUM" => "ECom",
-                "FURL" => env('error_url'),
+                "FURL" => 'https://mashawir.easymedia.agency/payment/error',
                 "MerchUID" => "$MerchUID",
-                "SURL" => env('success_url'),
+                "SURL" => 'https://mashawir.easymedia.agency/payment/call_back',
                 'setSecretKey' => "$setSecretKey",
             ],
             "Do_PyrDtl" => [
@@ -115,19 +103,19 @@ class PayController extends Controller
 
             $num = "B$rand2";
 
-            $payment = new Payment();
+            /*$payment = new Payment();
             $payment->order_id = $order_id;
             $payment->amount = $money;
             $payment->currency = 'KWD';
             $payment->method = 'KNET';
             $payment->status = 'completed';
             $payment->transaction_id = '';
-            $issave = $payment->save();
-            if ($issave) {
-                return Redirect()->to($response['PayUrl']);
+            $issave = $payment->save();*/
+            if ($response['PayUrl']) {
+                return $response['PayUrl'];
             } else {
                 return back()->withErrors([
-                    'email' => $response['ErrorMessage'],
+                    'error' => $response['ErrorMessage'],
                 ]);
             }
         } else {

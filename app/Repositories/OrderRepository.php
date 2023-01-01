@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 
+use App\Models\Payment;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,7 +32,16 @@ class OrderRepository extends BaseRepository
 
     public function store_order($data_request)
     {
-        return $this->model->create($data_request);
+        $order =  $this->model->create($data_request);
+        $payment = new Payment();
+        $payment->order_id = $order->id;
+        $payment->amount = $order->total;
+        $payment->currency = 'KWD';
+        $payment->method = 'KNET';
+        $payment->status = 'pending';
+        $payment->transaction_id = '';
+        $payment->save();
+        return $order;
 
     }
 

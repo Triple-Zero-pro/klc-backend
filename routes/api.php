@@ -75,6 +75,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('user/orders', [OrdersController::class, 'get_orders_by_user_id']);
     Route::post('user/cancel-order/{order_id}', [AuthController::class, 'cancel_order']);
     Route::post('orders/update-status/{order_id}', [OrdersController::class, 'update_status']);
+    Route::get('orders/confirmPay/{order_id}', [OrdersController::class, 'confirmPay']);
+
 
 
     //////////////////////////// OnboardsController ///////////////////////////////
