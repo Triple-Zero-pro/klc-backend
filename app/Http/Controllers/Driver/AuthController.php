@@ -227,7 +227,7 @@ class AuthController extends Controller
 
     public function accepted(Request $request, $id)
     {
-        if (!$order_check = Order::where('id', $id)->where('driver_id', Auth::user()->id)->first())
+        if (!$order_check = Order::where('id', $id)->where('driver_id', Auth::user()->id)->with('airport')->first())
             return response()->json(['status' => 'error', 'message' => 'Order ID Not Found',], 404);
 
         try {
@@ -280,7 +280,7 @@ class AuthController extends Controller
 
     public function servant_delivering(Request $request, $id)
     {
-        if (!$order_check = Order::where('id', $id)->where('driver_id', Auth::user()->id)->first())
+        if (!$order_check = Order::where('id', $id)->where('driver_id', Auth::user()->id)->with('airport')->first())
             return response()->json(['status' => 'error', 'message' => 'Order ID Not Found',], 404);
 
         try {
