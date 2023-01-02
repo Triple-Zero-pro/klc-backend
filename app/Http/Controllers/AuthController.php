@@ -13,13 +13,17 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
 use Vector\LaravelMultiSmsMethods\Facade\Sms;
+use App\Http\Controllers\PayController as PayController;
 
 class AuthController extends Controller
 {
     //
-    public function __construct()
+    public $payController;
+
+    public function __construct(PayController $payController)
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register','loginAdmin','apply_verification_code', 'update_password','send_verification_code']]);
+        $this->payController = $payController;
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'loginAdmin', 'apply_verification_code', 'update_password', 'send_verification_code']]);
     }
 
     public function login(Request $request)
@@ -51,9 +55,8 @@ class AuthController extends Controller
 
     }
 
-
-
-    public function loginAdmin(Request $request) {
+    public function loginAdmin(Request $request)
+    {
         $credentials = $request->only('email', 'password');
         try {
             if (!$token = auth()->guard('admins')->attempt($credentials)) {
@@ -64,6 +67,7 @@ class AuthController extends Controller
         }
         return $this->respondWithToken($token);
     }
+
     protected function respondWithToken($token)
     {
         return response()->json([
@@ -73,12 +77,11 @@ class AuthController extends Controller
         ]);
     }
 
-
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-           // 'email' => 'required|string|email|max:255|unique:users',
+            // 'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
             'phone' => 'required|string|min:6|unique:users',
         ]);
@@ -131,9 +134,9 @@ class AuthController extends Controller
     public function profile()
     {
         try {
-            $user= Auth::user();
+            $user = Auth::user();
             if ($user)
-                return response()->json(['status' => 'success','message' => 'User Profile', 'data' => $user]);
+                return response()->json(['status' => 'success', 'message' => 'User Profile', 'data' => $user]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -158,13 +161,13 @@ class AuthController extends Controller
         try {
             $user = Auth::user()->update([
                 'name' => $request->name,
-               // 'email' => $request->email,
-                'email' => (isset($request->email) && $request->email != NULL)  ? $request->email : Auth::user()->email,
-                'phone' => (isset($request->phone) && $request->phone != NULL)  ? $request->phone : Auth::user()->phone,
-                'password' => (isset($request->password) && $request->password != NULL)  ? Hash::make($request->password) : Auth::user()->getAuthPassword(),
+                // 'email' => $request->email,
+                'email' => (isset($request->email) && $request->email != NULL) ? $request->email : Auth::user()->email,
+                'phone' => (isset($request->phone) && $request->phone != NULL) ? $request->phone : Auth::user()->phone,
+                'password' => (isset($request->password) && $request->password != NULL) ? Hash::make($request->password) : Auth::user()->getAuthPassword(),
             ]);
             if ($user)
-                return response()->json(['status' => 'success','message' => 'User Updated Successfully', 'data' => Auth::user()]);
+                return response()->json(['status' => 'success', 'message' => 'User Updated Successfully', 'data' => Auth::user()]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -175,7 +178,7 @@ class AuthController extends Controller
 
     public function send_verification_code(Request $request)
     {
-        $phone_check = User::where('phone',$request->phone)->first();
+        $phone_check = User::where('phone', $request->phone)->first();
         if (!$phone_check)
             return response()->json(['status' => 'error', 'message' => 'Phone Number Not Registered Check Phone Again'], 404);
 
@@ -190,7 +193,7 @@ class AuthController extends Controller
             $phone_check->forceFill([
                 'verification_code' => $verification_code
             ])->save();
-            $message = "Your Verification Code to Reset Password is " . $verification_code ."  ";
+            $message = "Your Verification Code to Reset Password is " . $verification_code . "  ";
             $gateway = config('twilio');
             //Sms::driver($gateway)->sendSms($request->phone,$message);
             return response()->json(['status' => 'success', 'message' => $message, 'data' => $verification_code]);
@@ -203,29 +206,29 @@ class AuthController extends Controller
 
     }
 
-    public function apply_verification_code(Request $request,$phone_number)
+    public function apply_verification_code(Request $request, $phone_number)
     {
-        $check_code  = User::where([
+        $check_code = User::where([
             'phone' => $phone_number,
             'verification_code' => $request->verification_code,
         ])->first();
         if (!$check_code)
             return response()->json(['status' => 'error', 'message' => 'Phone Number Not Registered Check Phone Again',], 404);
 
-/*
-        $validator = Validator::make($request->all(), [
-            'verification_code' => 'required',
-            'password' => 'required|string|min:6',
-            ]);
+        /*
+                $validator = Validator::make($request->all(), [
+                    'verification_code' => 'required',
+                    'password' => 'required|string|min:6',
+                    ]);
 
-        if ($validator->fails())
-            return response()->json(['status' => 'success', 'message' => 'Error Validation', 'errors' => $validator->errors()]);*/
+                if ($validator->fails())
+                    return response()->json(['status' => 'success', 'message' => 'Error Validation', 'errors' => $validator->errors()]);*/
 
         try {
-           /* $check_code->forceFill([
-                'password' =>  Hash::make($request->password),
-                'verification_code' =>  NULL,
-            ])->save();*/
+            /* $check_code->forceFill([
+                 'password' =>  Hash::make($request->password),
+                 'verification_code' =>  NULL,
+             ])->save();*/
             return response()->json(['status' => 'success', 'message' => 'Verification Code Is Valid', 'data' => []]);
         } catch (Exception $e) {
             return response()->json([
@@ -235,9 +238,10 @@ class AuthController extends Controller
         }
 
     }
-    public function update_password(Request $request,$phone_number)
+
+    public function update_password(Request $request, $phone_number)
     {
-        $check_code  = User::where([
+        $check_code = User::where([
             'phone' => $phone_number,
             'verification_code' => $request->verification_code,
         ])->first();
@@ -248,15 +252,15 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'verification_code' => 'required',
             'password' => 'required|string|min:6',
-            ]);
+        ]);
 
         if ($validator->fails())
             return response()->json(['status' => 'success', 'message' => 'Error Validation', 'errors' => $validator->errors()]);
 
         try {
             $check_code->forceFill([
-                'password' =>  Hash::make($request->password),
-                'verification_code' =>  NULL,
+                'password' => Hash::make($request->password),
+                'verification_code' => NULL,
             ])->save();
             return response()->json(['status' => 'success', 'message' => 'Password Updated Successfully', 'data' => $check_code]);
         } catch (Exception $e) {
@@ -276,14 +280,14 @@ class AuthController extends Controller
             'credit_name' => 'required|string',
             'expired_date' => 'required',
             'cvv' => 'required|numeric',
-            ]);
+        ]);
 
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
         try {
             $add_credit = UserCredit::create([
-                'user_id' =>Auth::user()->id ,
+                'user_id' => Auth::user()->id,
                 'payment_method' => $request->payment_method ?? NULL,
                 'credit_number' => $request->credit_number,
                 'credit_name' => $request->credit_name,
@@ -293,7 +297,7 @@ class AuthController extends Controller
             if ($add_credit)
                 return response()->json(['status' => 'success', 'message' => 'Credit Card Added Successfully', 'data' => $add_credit]);
 
-            return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Again'],400);
+            return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Again'], 400);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -305,7 +309,7 @@ class AuthController extends Controller
 
     public function delete_credit($id)
     {
-        $credit_check = UserCredit::where(['id'=>$id,'user_id'=>Auth::user()->id])->first();
+        $credit_check = UserCredit::where(['id' => $id, 'user_id' => Auth::user()->id])->first();
 
         if ($credit_check == false)
             return response()->json(['status' => 'error', 'message' => 'Credit ID Not Found',], 404);
@@ -326,12 +330,12 @@ class AuthController extends Controller
     public function all_credit()
     {
         try {
-            $credits = UserCredit::where('user_id',Auth::user()->id)->get();
+            $credits = UserCredit::where('user_id', Auth::user()->id)->get();
 
             if (isset($credits) && count($credits) > 0)
                 return response()->json(['status' => 'success', 'data' => $credits]);
 
-            return response()->json(['status' => 'status','data' => [], 'message' => 'Not Credits Found']);
+            return response()->json(['status' => 'status', 'data' => [], 'message' => 'Not Credits Found']);
 
         } catch (Exception $e) {
             return response()->json([
@@ -345,7 +349,7 @@ class AuthController extends Controller
     public function get_balance()
     {
         try {
-            $balance = User::where('id',Auth::user()->id)->first();
+            $balance = User::where('id', Auth::user()->id)->first();
             if (isset($balance))
                 return response()->json(['status' => 'success', 'data' => $balance['balance']]);
 
@@ -360,6 +364,7 @@ class AuthController extends Controller
 
     public function add_balance(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'amount' => 'required',
         ]);
@@ -367,12 +372,14 @@ class AuthController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
         try {
-            $user = User::where('id',Auth::user()->id)->first();
-            if ($user)
-            {
+            $user = User::where('id', Auth::user()->id)->first();
+            if ($user) {
                 $user->balance += $request->amount;
                 $user->save();
-                return response()->json(['status' => 'success','message' => 'Balance Added Successfully', 'data' => $user['balance']]);
+                $total_amount = $request->amount;
+                $payment_method = $this->payController->payOrder($total_amount);
+                $user['redirect'] = $payment_method;
+                return response()->json(['status' => 'success', 'message' => 'Balance Added Successfully', 'data' => $user]);
             }
 
 
@@ -387,17 +394,17 @@ class AuthController extends Controller
 
     public function cancel_order($order_id)
     {
-        $check_order = Order::where('id',$order_id)->where('user_id',Auth::user()->id)->first();
-            if (!$check_order)
-                return response()->json(['status' => 'error','data' => '', 'message' => 'Order Not Valid'], 404);
+        $check_order = Order::where('id', $order_id)->where('user_id', Auth::user()->id)->first();
+        if (!$check_order)
+            return response()->json(['status' => 'error', 'data' => '', 'message' => 'Order Not Valid'], 404);
         try {
             $cancel_order = $check_order->update([
-                'status' => 'cancelled' ,
+                'status' => 'cancelled',
             ]);
             if ($cancel_order)
                 return response()->json(['status' => 'success', 'message' => 'Order Canceled Now ', 'data' => '']);
 
-            return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Canceled Again'],400);
+            return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Canceled Again'], 400);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -406,10 +413,6 @@ class AuthController extends Controller
         }
 
     }
-
-
-
-
 
 
 }
