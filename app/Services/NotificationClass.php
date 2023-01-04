@@ -14,7 +14,7 @@ class NotificationClass
     /**
      * @var string
      */
-    private static $server_key = "AAAANGmp70g:APA91bEl1_zyd0ZYoyJvKuS5HYK6dwzh71945X-DmcFKCSr4KbrdvCaaf3ABpEYnfak0Mv6NmS_ymdzIah1nDmxJdZoGYIm37gEYa-L-p6xLTCw7vBlGOwzAwQQy54-t8AX7jKZqFYmx";
+    private static $server_key = "AAAAstrj3sw:APA91bHthCk2k_bbuXpg3F3umE7tKh9IDr5z3OShbJ25Tr6GgBDAAePs5i-Dc9f7GELw94QGCzSM6qXA6BNOnmexC68PXY0xoAlRDLdiq-8FN6kLT17KphvsLqy9ybgu7W630jOkrukC";
 
     /**
      * @param string $to
