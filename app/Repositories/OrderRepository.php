@@ -38,7 +38,7 @@ class OrderRepository extends BaseRepository
         $payment->amount = $order->total;
         $payment->currency = 'KWD';
         $payment->method = 'KNET';
-        $payment->status = 'pending';
+        $payment->status = 'completed';
         $payment->transaction_id = '';
         $payment->save();
         return $order;

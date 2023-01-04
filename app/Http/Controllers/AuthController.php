@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\NotificationData;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\UserCredit;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+use Symfony\Component\HttpFoundation\Response;
 use Vector\LaravelMultiSmsMethods\Facade\Sms;
 use App\Http\Controllers\PayController as PayController;
 
@@ -93,6 +95,7 @@ class AuthController extends Controller
             'name' => $request->name,
             //'email' => $request->email,
             'phone' => $request->phone,
+            'fcm_token'=> $request->fcm_token,
             'password' => Hash::make($request->password),
         ]);
 
@@ -374,11 +377,34 @@ class AuthController extends Controller
         try {
             $user = User::where('id', Auth::user()->id)->first();
             if ($user) {
-                $user->balance += $request->amount;
-                $user->save();
                 $total_amount = $request->amount;
                 $payment_method = $this->payController->payOrder($total_amount);
                 $user['redirect'] = $payment_method;
+                return response()->json(['status' => 'success', 'message' => 'Balance Added Successfully', 'data' => $user]);
+            }
+
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+    public function update_balance(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'amount' => 'required',
+        ]);
+        if ($validator->fails())
+            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
+
+        try {
+            $user = User::where('id', Auth::user()->id)->first();
+            if ($user) {
+                $user->balance += $request->amount;
+                $user->save();
                 return response()->json(['status' => 'success', 'message' => 'Balance Added Successfully', 'data' => $user]);
             }
 
@@ -412,6 +438,12 @@ class AuthController extends Controller
             ], 400);
         }
 
+    }
+    public  function notifications(): \Illuminate\Http\JsonResponse
+    {
+        $user = Auth::user();
+        $notifications = NotificationData::where('receiver_token',$user->fcm_token)->get();
+        return \response()->json(['data' => $notifications , 'status' => true] , Response::HTTP_OK);
     }
 
 

@@ -51,6 +51,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('all-credit', 'all_credit');
     Route::get('get-balance', 'get_balance');
     Route::post('add-balance', 'add_balance');
+    Route::post('update-balance', 'update_balance');
 });
 Route::group(['middleware' => 'auth:api'], function () {
     //////////////////////////// category ///////////////////////////////
@@ -75,6 +76,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('user/orders', [OrdersController::class, 'get_orders_by_user_id']);
     Route::post('user/cancel-order/{order_id}', [AuthController::class, 'cancel_order']);
     Route::post('orders/update-status/{order_id}', [OrdersController::class, 'update_status']);
+    Route::post('orders/wallet', [OrdersController::class, 'store_by_wallet']);
+    Route::get('notifications', [AuthController::class, 'notifications']);
     Route::get('orders/confirmPay/{order_id}', [OrdersController::class, 'confirmPay']);
 
 
