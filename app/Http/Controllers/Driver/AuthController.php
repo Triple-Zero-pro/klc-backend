@@ -64,6 +64,7 @@ class AuthController extends Controller
         $driver = Driver::create([
             'name' => $request->name,
             'phone' => $request->phone,
+            'fcm_token'=> $request->fcm_token,
             'password' => Hash::make($request->password),
         ]);
 
