@@ -53,6 +53,16 @@ class OrderRepository extends BaseRepository
         return $order;
 
     }
+
+    public function assign_order($data_request, $id)
+    {
+        $order = $this->model->find($id);
+        $order->update([
+            'driver_id'=>$data_request['driver_id']
+        ]);
+        return $order;
+
+    }
     public function update_status($data_request, $order_id)
     {
         $order = $this->model->find($order_id);

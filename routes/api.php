@@ -131,6 +131,8 @@ Route::group(['middleware' => 'auth:admins', 'prefix' => 'admin/dashboard', 'as'
     Route::get('user/orders', [DashOrdersController::class, 'get_orders_by_user_id']);
     Route::post('user/cancel-order/{order_id}', [AuthController::class, 'cancel_order']);
     Route::post('orders/update-status/{order_id}', [DashOrdersController::class, 'update_status']);
+    Route::post('orders/assign_order_to_driver/{order_id}', [DashOrdersController::class, 'assign_order_to_driver']);
+
 
 
     //////////////////////////// OnboardsController ///////////////////////////////
@@ -181,6 +183,7 @@ Route::group(['prefix' => 'driver', 'as' => 'drivers.'], function () {
     Route::post('send-verification-code', [DriverAuthController::class, 'send_verification_code']);
     Route::post('apply-verification-code/{phone_number}', [DriverAuthController::class, 'apply_verification_code']);
     Route::post('update-password/{phone_number}', [DriverAuthController::class, 'update_password']);
+    Route::get('notifications', [DriverAuthController::class, 'notifications']);
 });
 
 

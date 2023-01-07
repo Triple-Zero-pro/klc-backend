@@ -112,7 +112,7 @@ class OrdersController extends Controller
             $NotificationClass = NotificationClass::fcmPushNotification(Auth::user()->fcm_token, $NotificationClassTilte, $order, 'web');
             if ($NotificationClass) {
                 NotificationData::create([
-                    'sender_id' => 'Yone App',
+                    'sender_id' => 'Mashawir App',
                     'receiver_token' => Auth::user()->fcm_token,
                     'title' => $NotificationClassTilte,
                     'description' => $NotificationClassDesc,
@@ -151,7 +151,7 @@ class OrdersController extends Controller
         $NotificationClass = NotificationClass::fcmPushNotification(Auth::user()->fcm_token, $NotificationClassTilte, $order, 'web');
         if ($NotificationClass) {
             NotificationData::create([
-                'sender_id' => 'Yone App',
+                'sender_id' => 'Mashawir App',
                 'receiver_token' => Auth::user()->fcm_token,
                 'title' => $NotificationClassTilte,
                 'description' => $NotificationClassDesc,

@@ -443,7 +443,7 @@ class AuthController extends Controller
     {
         $user = Auth::user();
         $notifications = NotificationData::where('receiver_token',$user->fcm_token)->get();
-        return \response()->json(['data' => $notifications , 'status' => true] , Response::HTTP_OK);
+        return response()->json(['data' => $notifications , 'status' => 'success']);
     }
 
 

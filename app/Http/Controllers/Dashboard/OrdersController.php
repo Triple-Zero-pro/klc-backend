@@ -164,6 +164,31 @@ class OrdersController extends Controller
     }
 
 
+    public function assign_order_to_driver(Request $request, $id)
+    {
+        if (!$order_check = $this->orderRepository->show($id))
+            return response()->json(['status' => 'error', 'message' => 'Order ID Not Found',], 404);
+
+        $validator = Validator::make($request->all(), [
+            'driver_id' => 'required',
+        ]);
+        if ($validator->fails())
+            return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
+
+        $data_request = $request->post();
+        try {
+            $order = $this->orderRepository->assign_order($data_request, $id);
+            if ($order)
+                return response()->json(['status' => 'success', 'message' => 'Order Assigned To Driver  Successfully', 'data' => $order]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
+
     public function destroy($id)
     {
         if (!$order_check = $this->orderRepository->show($id))

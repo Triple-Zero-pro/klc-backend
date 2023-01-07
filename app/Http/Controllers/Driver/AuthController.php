@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Driver;
 
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
+use App\Models\NotificationData;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\UserCredit;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -377,6 +379,12 @@ class AuthController extends Controller
             ], 400);
         }
 
+    }
+    public  function notifications(): \Illuminate\Http\JsonResponse
+    {
+        $user = Auth::user();
+        $notifications = NotificationData::where('receiver_token',$user->fcm_token)->get();
+        return response()->json(['data' => $notifications , 'status' => 'success']);
     }
 
     protected function uploadImage(Request $request)
