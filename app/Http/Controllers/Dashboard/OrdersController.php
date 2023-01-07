@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Dashboard;
 
 
 use App\Models\Category;
+use App\Models\Driver;
+use App\Models\NotificationData;
 use App\Models\Order;
 use App\Http\Controllers\Controller;
 use App\Repositories\OrderRepository as OrderRepository;
+use App\Services\NotificationClass;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -169,6 +172,7 @@ class OrdersController extends Controller
         if (!$order_check = $this->orderRepository->show($id))
             return response()->json(['status' => 'error', 'message' => 'Order ID Not Found',], 404);
 
+        $driver = Driver::find($request->driver_id);
         $validator = Validator::make($request->all(), [
             'driver_id' => 'required',
         ]);
@@ -178,6 +182,21 @@ class OrdersController extends Controller
         $data_request = $request->post();
         try {
             $order = $this->orderRepository->assign_order($data_request, $id);
+            $NotificationClassTilte = " ! لديك رحلة جديد ورقم الطلب {$order->id}";
+            $NotificationClassDesc = " لديك رحلة جديد";
+            $NotificationClass = NotificationClass::fcmPushNotification(Auth::user()->fcm_token, $NotificationClassTilte, $order, 'web');
+            if ($NotificationClass) {
+                NotificationData::create([
+                    'sender_id' => 'Mashawir App',
+                    'receiver_token' => $driver->fcm_token,
+                    'title' => $NotificationClassTilte,
+                    'description' => $NotificationClassDesc,
+                    'image' => '',
+                    'action' => 'assign_order',
+                    'type' => 'assign',
+                    'platform' => 'web',
+                ]);
+            }
             if ($order)
                 return response()->json(['status' => 'success', 'message' => 'Order Assigned To Driver  Successfully', 'data' => $order]);
         } catch (Exception $e) {
