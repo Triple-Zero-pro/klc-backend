@@ -17,6 +17,7 @@ use App\Http\Controllers\Dashboard\AirportsController as DashAirportsController;
 use App\Http\Controllers\Dashboard\ServicesController as DashServicesController;
 use App\Http\Controllers\Dashboard\OnboardsController as DashOnboardsController;
 use App\Http\Controllers\Dashboard\OrdersController as DashOrdersController;
+use App\Http\Controllers\Dashboard\DriverController as DashDriverController;
 use App\Http\Controllers\Dashboard\HomeController;
 use App\Http\Controllers\Dashboard\ServiceAttributesController as DashServiceAttributesController;
 use App\Http\Controllers\Driver\AuthController as DriverAuthController;
@@ -159,6 +160,14 @@ Route::group(['middleware' => 'auth:admins', 'prefix' => 'admin/dashboard', 'as'
     //////////////////////////// Airports /////////////////////////////////
     Route::resource('airports', DashAirportsController::class);
     Route::post('airports/{id}', [DashAirportsController::class, 'update']);
+
+    /////////////////////////// Drivers /////////////////////////////////
+    Route::get('drivers', [DashDriverController::class, 'drivers']);
+    Route::post('driver/register', [DashDriverController::class, 'register']);
+    Route::get('driver/profile/{driver_id}', [DashDriverController::class, 'profile']);
+    Route::post('driver/profile/{driver_id}', [DashDriverController::class, 'update']);
+    Route::post('driver/update-status/{driver_id}', [DashDriverController::class, 'update_status']);
+    Route::get('driver/{driver_id}/orders', [DashDriverController::class, 'get_orders_by_user_id']);
 
 });
 
