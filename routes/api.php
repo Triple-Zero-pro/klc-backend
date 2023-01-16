@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\AdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -168,6 +169,14 @@ Route::group(['middleware' => 'auth:admins', 'prefix' => 'admin/dashboard', 'as'
     Route::post('driver/profile/{driver_id}', [DashDriverController::class, 'update']);
     Route::post('driver/update-status/{driver_id}', [DashDriverController::class, 'update_status']);
     Route::get('driver/{driver_id}/orders', [DashDriverController::class, 'get_orders_by_user_id']);
+
+
+    /////////////////////////// admins /////////////////////////////////
+    Route::get('moderators', [AdminController::class, 'admins']);
+    Route::post('moderators/register', [AdminController::class, 'register']);
+    Route::get('moderators/{admin_id}', [AdminController::class, 'profile']);
+    Route::post('moderators/{admin_id}', [AdminController::class, 'update']);
+    Route::post('moderators/update-status/{admin_id}', [AdminController::class, 'update_status']);
 
 });
 
