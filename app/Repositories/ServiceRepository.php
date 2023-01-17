@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Prettus\Repository\Eloquent\BaseRepository;
 
@@ -18,16 +19,16 @@ class ServiceRepository extends BaseRepository
      */
 
 
-    public function index($category_id,$service_name = NULL,$lang= 'ar')
+    public function index($category_id, $service_name = NULL, $lang = 'ar')
     {
         if ($category_id != 0)
-            return $this->model->where('category_id',$category_id)->with(['category','serviceAttributes'])->paginate(15);
+            return $this->model->where('category_id', $category_id)->with(['category', 'serviceAttributes'])->paginate(15);
 
         if ($service_name)
-            return $this->model->where('name_'.$lang.'','LIKE','%'.$service_name.'%')->get();
+            return $this->model->where('name_' . $lang . '', 'LIKE', '%' . $service_name . '%')->get();
 
 
-        return $this->model->with(['category','serviceAttributes'])->paginate(15);
+        return $this->model->with(['category', 'serviceAttributes'])->paginate(15);
     }
 
     public function show($service_id)
@@ -68,9 +69,33 @@ class ServiceRepository extends BaseRepository
         return $this->model->where('category_id', $category_id)
             ->get();
     }
-    public function get_services_by_name($service_name,$lang)
+
+    public function get_services_by_name($service_name, $lang)
     {
-        return $this->model->where('name_'.$lang.'','LIKE','%'.$service_name.'%')->get();
+        return $this->model->where('name_' . $lang . '', 'LIKE', '%' . $service_name . '%')->get();
+    }
+
+    public function categories_statistics()
+    {
+        return DB::table('orders')
+            ->leftJoin('services', 'orders.service_id', '=', 'services.id')
+            ->leftJoin('categories', 'services.category_id', '=', 'categories.id')
+            ->selectRaw('COUNT(orders.id) AS orders_numbers, SUM(orders.total) as orders_amounts,categories.id,categories.name_ar')
+            ->groupBy('categories.id')
+            ->groupBy('categories.name_ar')
+            ->get();
+    }
+
+    public function services_by_categories_statistics($cat_id)
+    {
+        return DB::table('orders')
+            ->leftJoin('services', 'orders.service_id', '=', 'services.id')
+            ->leftJoin('categories', 'services.category_id', '=', 'categories.id')
+            ->selectRaw('COUNT(orders.id) AS orders_numbers, SUM(orders.total) as orders_amounts,services.id,services.name_ar')
+            ->where('category_id',$cat_id)
+            ->groupBy('services.id')
+            ->groupBy('services.name_ar')
+            ->get();
     }
 
 

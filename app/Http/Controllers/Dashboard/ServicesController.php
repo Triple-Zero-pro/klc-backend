@@ -183,6 +183,41 @@ class ServicesController extends Controller
             ], 400);
         }
     }
+
+    public function categories_statistics()
+    {
+        try {
+            $categories_statistics = $this->serviceRepository->categories_statistics();
+            if (isset($categories_statistics) && count($categories_statistics) > 0)
+                return response()->json(['status' => 'success', 'data' => $categories_statistics]);
+            else
+                return response()->json(['status' => 'success','data' => [], 'message' => 'Not Data Found']);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
+    public function services_by_categories_statistics($cat_id)
+    {
+        try {
+            $services_by_categories_statistics = $this->serviceRepository->services_by_categories_statistics($cat_id);
+            if (isset($services_by_categories_statistics) && count($services_by_categories_statistics) > 0)
+                return response()->json(['status' => 'success', 'data' => $services_by_categories_statistics]);
+            else
+                return response()->json(['status' => 'success','data' => [], 'message' => 'Not Data Found']);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
     protected function uploadImage(Request $request)
     {
         if (!$request->hasFile('image'))
