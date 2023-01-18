@@ -200,6 +200,7 @@ Route::group(['prefix' => 'driver', 'as' => 'drivers.'], function () {
     Route::post('update-location', [DriverAuthController::class, 'update_location']);
     Route::get('orders', [DriverAuthController::class, 'get_orders_by_user_id']);
     Route::get('orders/{driver_status}', [DriverAuthController::class, 'get_orders_by_driver_status']);
+    Route::post('orders/pending/{order_id}', [DriverAuthController::class, 'pending']);
     Route::post('orders/accepted/{order_id}', [DriverAuthController::class, 'accepted']);
     Route::post('orders/refused/{order_id}', [DriverAuthController::class, 'refused']);
     Route::post('orders/servant-delivered/{order_id}', [DriverAuthController::class, 'servant_delivered']);

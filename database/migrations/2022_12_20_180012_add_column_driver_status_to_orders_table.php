@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             //
-          $table->enum('driver_status',['accepted','refused','pending','servant_delivered','servant_delivering'])->default('pending')->after('driver_id');
+          $table->enum('driver_status',['new_order','accepted','refused','pending','servant_delivered','servant_delivering'])->default('new_order')->after('driver_id');
         });
     }
 

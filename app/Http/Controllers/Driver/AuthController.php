@@ -246,6 +246,24 @@ class AuthController extends Controller
         }
     }
 
+    public function pending(Request $request, $id)
+    {
+        if (!$order_check = Order::where('id', $id)->where('driver_id', Auth::user()->id)->with('airport')->first())
+            return response()->json(['status' => 'error', 'message' => 'Order ID Not Found',], 404);
+
+        try {
+            $order = $order_check;
+            $order_check->driver_status = 'pending';
+            if ($order_check->save())
+                return response()->json(['status' => 'success', 'message' => 'Order Updated Successfully', 'data' => $order]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
     public function refused(Request $request, $id)
     {
         if (!$order_check = Order::where('id', $id)->where('driver_id', Auth::user()->id)->first())
