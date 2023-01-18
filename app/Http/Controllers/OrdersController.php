@@ -164,12 +164,14 @@ class OrdersController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Payment Order Completed', 'data' => $order]);
     }
 
-    public function get_orders_by_user_id()
+    public function get_orders_by_user_id(Request $request)
     {
 
         try {
-
-            $orders = $this->orderRepository->get_orders_by_user_id();
+            $status = 0;
+            if ($request->status)
+                $status = $request->status;
+            $orders = $this->orderRepository->get_orders_by_user_id($status);
             if (isset($orders) && count($orders) > 0)
                 return response()->json(['status' => 'success', 'data' => $orders]);
             else

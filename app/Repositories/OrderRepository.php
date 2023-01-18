@@ -83,8 +83,11 @@ class OrderRepository extends BaseRepository
         $order->delete();
     }
 
-    public function get_orders_by_user_id()
+    public function get_orders_by_user_id($status)
     {
+        if ($status)
+            return $this->model->where('user_id', Auth::user()->id)->where('status',$status)->with(['service','airport'])->get();
+
         return $this->model->where('user_id', Auth::user()->id)->with(['service','airport'])->get();
     }
 
