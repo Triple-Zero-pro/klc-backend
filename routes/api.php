@@ -209,6 +209,7 @@ Route::group(['prefix' => 'driver', 'as' => 'drivers.'], function () {
     Route::post('apply-verification-code/{phone_number}', [DriverAuthController::class, 'apply_verification_code']);
     Route::post('update-password/{phone_number}', [DriverAuthController::class, 'update_password']);
     Route::get('notifications', [DriverAuthController::class, 'notifications']);
+    Route::get('fcm_token/{fcm_token}', [DriverAuthController::class, 'fcm_token']);
 });
 
 

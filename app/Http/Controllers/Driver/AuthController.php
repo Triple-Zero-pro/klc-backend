@@ -405,6 +405,24 @@ class AuthController extends Controller
         $notifications = NotificationData::where('receiver_token',$user->fcm_token)->get();
         return response()->json(['data' => $notifications , 'status' => 'success']);
     }
+    public  function fcm_token($fcm_token): \Illuminate\Http\JsonResponse
+    {
+        $user_check = Auth::user();
+        if (!$user_check)
+            return response()->json(['status' => 'error', 'message' => 'Driver ID Not Found',], 404);
+
+        try {
+            $user = $user_check;
+            $user_check->fcm_token = $fcm_token;
+            if ($user_check->save())
+                return response()->json(['status' => 'success', 'message' => 'Driver Token Updated Successfully', 'data' => $user_check]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
 
     protected function uploadImage(Request $request)
     {
