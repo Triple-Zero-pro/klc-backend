@@ -73,7 +73,7 @@ class AirportsController extends Controller
         $validator = Validator::make($request->all(), [
             'name_en' => "required|string|min:3|max:191",
             'name_ar' => "required|string|min:3|max:191",
-            'status' => 'required|in:active,archived',
+            'status' => 'required|in:active,inactive',
         ]);
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
@@ -101,7 +101,7 @@ class AirportsController extends Controller
         $validator = Validator::make($request->all(), [
             'name_en' => "required|string|min:3|max:191",
             'name_ar' => "required|string|min:3|max:191",
-            'status' => 'required|in:active,archived',
+            'status' => 'required|in:active,inactive',
         ]);
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
