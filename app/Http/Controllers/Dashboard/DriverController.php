@@ -77,7 +77,7 @@ class DriverController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'password' => 'required|string|min:6',
-            'phone' => 'required|string|min:6|unique:drivers',
+            'phone' => "required|string|min:6|unique:drivers,phone,$driver_id",
         ]);
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
@@ -86,7 +86,6 @@ class DriverController extends Controller
         try {
             $user = $driver->update([
                 'name' => $request->name,
-                'image' => $request->image,
                 'email' => (isset($request->email) && $request->email != NULL) ? $request->email : $driver->email,
                 'phone' => (isset($request->phone) && $request->phone != NULL) ? $request->phone : $driver->phone,
                 'password' => (isset($request->password) && $request->password != NULL) ? Hash::make($request->password) : $driver->password,
@@ -127,7 +126,7 @@ class DriverController extends Controller
     public function get_orders_by_user_id($driver_id)
     {
         try {
-            $orders = Order::where('driver_id', $driver_id)->get();
+            $orders = Order::where('driver_id', $driver_id)->with('service')->get();
             if (isset($orders) && count($orders) > 0)
                 return response()->json(['status' => 'success', 'data' => $orders]);
             else
