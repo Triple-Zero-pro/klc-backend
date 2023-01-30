@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('banners', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('banner_type_id')->nullable()->constrained('banners')->nullOnDelete();
+            $table->foreignId('banner_type_id')->nullable()->constrained('banner_types')->nullOnDelete();
             $table->string('target')->nullable();
             $table->string('image')->nullable();
             $table->enum('status',['active','inactive'])->default('active');
