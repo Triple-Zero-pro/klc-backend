@@ -20,7 +20,7 @@ class DriversMoneyRepository extends BaseRepository
 
     public function index()
     {
-        return $this->model->all();
+        return $this->model->with('driver')->get();
     }
 
 
