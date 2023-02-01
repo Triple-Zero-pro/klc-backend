@@ -86,7 +86,6 @@ class BannersController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Banner ID Not Found',], 404);
 
         $validator = Validator::make($request->all(), [
-            'image' => 'required',
             'target' => 'required',
             'banner_type_id' => 'required',
             'status' => 'required|in:active,inactive',
@@ -96,7 +95,8 @@ class BannersController extends Controller
 
 
         $data_request = $request->except('image');
-        $data_request['image'] = $this->uploadImage($request);
+        if (isset($request->image))
+            $data_request['image'] = $this->uploadImage($request);
         try {
             $banner = $this->bannerRepository->update_banner($data_request, $id);
             if ($banner)

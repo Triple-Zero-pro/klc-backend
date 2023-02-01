@@ -26,7 +26,7 @@ class DriversMoneyRepository extends BaseRepository
 
     public function show($id)
     {
-        return $this->model->find($id);
+        return $this->model->with('driver')->find($id);
     }
 
 
