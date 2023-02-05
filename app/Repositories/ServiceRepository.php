@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 use App\Models\Category;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Prettus\Repository\Eloquent\BaseRepository;
@@ -75,15 +76,25 @@ class ServiceRepository extends BaseRepository
         return $this->model->where('name_' . $lang . '', 'LIKE', '%' . $service_name . '%')->get();
     }
 
-    public function categories_statistics()
+    public function categories_statistics($time)
     {
-        return DB::table('orders')
-            ->leftJoin('services', 'orders.service_id', '=', 'services.id')
-            ->leftJoin('categories', 'services.category_id', '=', 'categories.id')
-            ->selectRaw('COUNT(orders.id) AS orders_numbers, SUM(orders.total) as orders_amounts,categories.id,categories.name_ar')
+        if ($time == 'today')
+            $time = Carbon::today();
+        elseif($time == 'week')
+            $time = Carbon::now()->subdays(7);
+        elseif($time == 'month')
+            $time = Carbon::now()->subdays(30);
+
+        return  DB::table('orders')
+            ->where('orders.created_at', '>=',$time)
+            ->leftJoin('categories', 'orders.category_id', '=', 'categories.id')
+            ->selectRaw('COUNT(orders.id) AS orders_numbers, SUM(orders.total) as orders_amounts')
+            ->addSelect('categories.id')
+            ->addSelect('categories.name_ar')
             ->groupBy('categories.id')
             ->groupBy('categories.name_ar')
             ->get();
+
     }
 
     public function services_by_categories_statistics($cat_id)

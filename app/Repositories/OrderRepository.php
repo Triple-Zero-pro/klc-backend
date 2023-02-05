@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 
 use App\Models\Payment;
+use App\Models\Service;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,7 +33,10 @@ class OrderRepository extends BaseRepository
 
     public function store_order($data_request)
     {
+        $category_service= Service::where('id',$data_request['service_id'])->first();
         $order =  $this->model->create($data_request);
+        $order->category_id = $category_service['category_id'];
+        $order->save();
         $payment = new Payment();
         $payment->order_id = $order->id;
         $payment->amount = $order->total;

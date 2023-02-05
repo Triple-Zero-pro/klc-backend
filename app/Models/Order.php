@@ -13,7 +13,7 @@ class Order extends Model
 
     protected $fillable = ['user_id', 'service_id', 'from', 'to', 'appointment_date','appointment_time', 'image_front', 'image_back',
                             'image_ticket','image_passport', 'payment_method', 'payment_status', 'status', 'total','verified','lat','long','cancel_reason','airport_id',
-                            'driver_id','driver_status',
+                            'driver_id','driver_status','category_id',
                             ];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
