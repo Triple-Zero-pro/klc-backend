@@ -159,6 +159,7 @@ Route::group(['middleware' => 'auth:admins', 'prefix' => 'admin/dashboard', 'as'
     Route::post('clients/{id}', [ClientsController::class, 'update']);
     Route::get('client_orders/{client_id}', [ClientsController::class, 'client_orders']);
     Route::get('client-banned/{client_id}', [ClientsController::class, 'client_banned']);
+    Route::get('client-active/{client_id}', [ClientsController::class, 'client_active']);
 
 
     //////////////////////////// Airports /////////////////////////////////

@@ -68,6 +68,14 @@ class ClientRepository extends BaseRepository
         return $client;
 
     }
+    public function client_active($client_id)
+    {
+        $client = $this->model->find($client_id);
+        $client->status = 'active';
+        $client->save();
+        return $client;
+
+    }
 
     function model(): string
     {

@@ -128,6 +128,22 @@ class ClientsController extends Controller
             ], 400);
         }
     }
+    public function client_active($client_id)
+    {
+        if (!$client_check = $this->clientRepository->show($client_id))
+            return response()->json(['status' => 'error', 'message' => 'Client ID Not Found'], 404);
+
+        try {
+            $client = $this->clientRepository->client_active($client_id);
+            if ($client)
+                return response()->json(['status' => 'success', 'message' => 'Client Active Successfully', 'data' => $client]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
 
     protected function uploadImage(Request $request,$image_name)
     {
