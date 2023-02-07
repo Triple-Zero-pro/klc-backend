@@ -68,9 +68,14 @@ class ClientsController extends Controller
 
 
         $data_request = $request->except(['image_front','image_back','image']);
-        $data_request['image_front'] = $this->uploadImage($request,'image_front');
-        $data_request['image_back'] = $this->uploadImage($request,'image_back');
-        $data_request['image'] = $this->uploadImage($request,'image');
+        if (isset($request->image))
+            $data_request['image'] = $this->uploadImage($request,'image');
+
+        if (isset($request->image_front))
+            $data_request['image_front'] = $this->uploadImage($request,'image_front');
+
+        if (isset($request->image_back))
+            $data_request['image_back'] = $this->uploadImage($request,'image_back');
         try {
             $category = $this->clientRepository->update_client($data_request, $id);
             if ($category)

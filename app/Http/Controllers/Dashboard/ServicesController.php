@@ -70,7 +70,6 @@ class ServicesController extends Controller
             'description_ar' => 'required|min:4',
             'terms_conditions_ar' => 'required|min:4',
             'category_id' => 'required|numeric',
-            'image' => 'required',
             'price' => 'required|between:0,99.99',
             'status' => 'required|in:active,unactive',
         ]);
@@ -78,7 +77,8 @@ class ServicesController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
         $data_request = $request->except('image');
-        $data_request['image'] = $this->uploadImage($request);
+        if (isset($request->image))
+            $data_request['image'] = $this->uploadImage($request);
         try {
             $service = $this->serviceRepository->store_service($data_request);
             if ($service)
@@ -108,7 +108,6 @@ class ServicesController extends Controller
             'description_ar' => 'required|min:4',
             'terms_conditions_ar' => 'required|min:4',
             'category_id' => 'required|numeric',
-            'image' => 'required',
             'price' => 'required|between:0,99.99',
             'status' => 'required|in:active,unactive',
         ]);
@@ -116,7 +115,8 @@ class ServicesController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
         $data_request = $request->except('image');
-        $data_request['image'] = $this->uploadImage($request);
+        if (isset($request->image))
+            $data_request['image'] = $this->uploadImage($request);
         try {
             $service = $this->serviceRepository->update_service($data_request, $id);
             if ($service)

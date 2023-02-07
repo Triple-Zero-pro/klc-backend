@@ -82,7 +82,6 @@ class DriverController extends Controller
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
-        $request->image = $this->uploadImage($request);
         try {
             $user = $driver->update([
                 'name' => $request->name,

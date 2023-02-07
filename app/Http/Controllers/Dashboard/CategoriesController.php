@@ -52,7 +52,6 @@ class CategoriesController extends Controller
         $validator = Validator::make($request->all(), [
             'name_en' => "required|string|min:3|max:191",
             'name_ar' => "required|string|min:3|max:191",
-            'image' => 'required',
             'status' => 'required|in:active,archived',
         ]);
         if ($validator->fails())
@@ -60,7 +59,8 @@ class CategoriesController extends Controller
 
 
         $data_request = $request->except('image');
-        $data_request['image'] = $this->uploadImage($request);
+        if (isset($request->image))
+            $data_request['image'] = $this->uploadImage($request);
         try {
             $category = $this->categoryRepository->store_category($data_request);
             if ($category)
@@ -119,7 +119,8 @@ class CategoriesController extends Controller
 
 
         $data_request = $request->except('image');
-        $data_request['image'] = $this->uploadImage($request);
+        if (isset($request->image))
+            $data_request['image'] = $this->uploadImage($request);
         try {
             $category = $this->categoryRepository->update_category($data_request,$id);
             if ($category)

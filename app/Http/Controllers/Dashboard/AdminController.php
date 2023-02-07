@@ -77,22 +77,19 @@ class AdminController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|max:255',
+            'email' => "required|string|max:255|unique:admins,email,$admin_id",
             'phone_number' => 'required|string|max:255',
-            'password' => 'required|string|min:6',
         ]);
         if ($validator->fails())
             return response()->json(['status' => 'error', 'message' => 'Error Validation', 'errors' => $validator->errors()], 406);
 
-        $request->image = $this->uploadImage($request);
         try {
             $user = $admin->update([
                 'username' => $request->name.time(),
                 'name' => $request->name,
                 'phone_number' => $request->phone_number,
-                'image' => $request->image,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
+                'password' => isset($request->password) ? Hash::make($request->password) : $admin->password,
             ]);
             if ($user)
                 return response()->json(['status' => 'success', 'message' => 'Admin Updated Successfully', 'data' => $admin]);
