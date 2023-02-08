@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Airport;
 use App\Models\Order;
 use App\Repositories\AirportRepository as AirportRepository;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -26,6 +27,11 @@ class HomeController extends Controller
         $data['orders_cancelled'] = Order::where('status','cancelled')->get();
         $data['orders_cancelled'] = count($data['orders_cancelled']);
         $data['orders_total'] = Order::sum('total');
+        $data['orders_map']  = Order::select('id', 'created_at', 'total')
+            ->get()
+            ->groupBy(function($date) {
+                return Carbon::parse($date->created_at)->format('d');
+            });
 
 
         try {
