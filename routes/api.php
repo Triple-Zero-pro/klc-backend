@@ -173,6 +173,7 @@ Route::group(['middleware' => 'auth:admins', 'prefix' => 'admin/dashboard', 'as'
     Route::post('driver/profile/{driver_id}', [DashDriverController::class, 'update']);
     Route::post('driver/update-status/{driver_id}', [DashDriverController::class, 'update_status']);
     Route::get('driver/{driver_id}/orders', [DashDriverController::class, 'get_orders_by_user_id']);
+    Route::get('driver/statistics/{driver_id}', [DashDriverController::class, 'statistics']);
 
     /////////////////////////// driversMonies /////////////////////////////////
     Route::resource('driversMonies', DriversMoniesController::class);

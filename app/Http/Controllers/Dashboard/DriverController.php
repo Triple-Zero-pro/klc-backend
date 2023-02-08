@@ -139,6 +139,29 @@ class DriverController extends Controller
         }
     }
 
+    public function statistics($driver_id)
+    {
+        $data = [];
+        $data['orders_completed'] = Order::where('driver_id', $driver_id)->where('status','completed')->count();
+        $data['orders_pending'] = Order::where('driver_id', $driver_id)->where('status','pending')->where('driver_id', $driver_id)->count();
+        $data['orders_cancelled'] = Order::where('driver_id', $driver_id)->where('status','cancelled')->where('driver_id', $driver_id)->count();
+        $data['orders_total'] = Order::where('driver_id', $driver_id)->count();
+
+
+        try {
+            if (isset($data) && count($data) > 0)
+                return response()->json(['status' => 'success', 'data' => $data]);
+            else
+                return response()->json(['status' => 'success','data' => [], 'message' => 'Not Analytics Found']);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+
     protected function uploadImage(Request $request)
     {
         if (!$request->hasFile('image'))
