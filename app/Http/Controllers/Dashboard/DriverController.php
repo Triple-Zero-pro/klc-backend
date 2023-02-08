@@ -76,7 +76,6 @@ class DriverController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'password' => 'required|string|min:6',
             'phone' => "required|string|min:6|unique:drivers,phone,$driver_id",
         ]);
         if ($validator->fails())
