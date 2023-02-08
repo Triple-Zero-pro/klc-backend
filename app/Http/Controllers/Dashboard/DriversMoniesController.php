@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Repositories\DriversMoneyRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -83,6 +84,22 @@ class DriversMoniesController extends Controller
             $DriversMoney = $this->driversMoneyRepository->store_DriversMoney($data_request);
             if ($DriversMoney)
                 return response()->json(['status' => 'success', 'message' => 'Drivers Money Created Successfully', 'data' => $DriversMoney]);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something wrong Please Try Again',
+            ], 400);
+        }
+    }
+    public function statistics()
+    {
+        try {
+            $data = $this->driversMoneyRepository->statistics();
+            if (isset($data) && count($data) > 0)
+                return response()->json(['status' => 'success', 'data' => $data]);
+            else
+                return response()->json(['status' => 'success','data' => [], 'message' => 'Not Analytics Found']);
 
         } catch (Exception $e) {
             return response()->json([

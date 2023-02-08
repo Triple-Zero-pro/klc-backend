@@ -177,6 +177,7 @@ Route::group(['middleware' => 'auth:admins', 'prefix' => 'admin/dashboard', 'as'
 
     /////////////////////////// driversMonies /////////////////////////////////
     Route::resource('driversMonies', DriversMoniesController::class);
+    Route::get('driversMonies-statistics', [DriversMoniesController::class, 'statistics']);
 
 
     /////////////////////////// admins /////////////////////////////////

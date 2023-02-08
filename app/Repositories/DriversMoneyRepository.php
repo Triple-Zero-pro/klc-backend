@@ -37,6 +37,17 @@ class DriversMoneyRepository extends BaseRepository
 
     }
 
+    public function statistics()
+    {
+        $data= [];
+         $data['total_money'] = $this->model->sum('amount');
+         $data['total_money_salary'] = $this->model->where('type','salary')->sum('amount');
+         $data['total_money_petrol'] = $this->model->where('type','petrol')->sum('amount');
+         $data['total_monies_count'] = $this->model->count('id');
+         return $data;
+
+    }
+
 
     function model(): string
     {
