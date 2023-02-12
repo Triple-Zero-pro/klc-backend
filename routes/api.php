@@ -122,7 +122,7 @@ Route::group(['middleware' => 'auth:admins', 'prefix' => 'admin/dashboard', 'as'
     Route::get('get_services_by_category/{category_id}', [DashServicesController::class, 'get_services_by_category']);
     Route::get('get_services_by_name/{service_name}', [DashServicesController::class, 'get_services_by_name']);
     Route::get('categories_statistics/{time}', [DashServicesController::class, 'categories_statistics']);
-    Route::get('services_by_categories_statistics/{cat_id}', [DashServicesController::class, 'services_by_categories_statistics']);
+    Route::get('services_by_categories_statistics/{cat_id}/{time}', [DashServicesController::class, 'services_by_categories_statistics']);
 
 
     //////////////////////////// service-attributes ///////////////////////////////

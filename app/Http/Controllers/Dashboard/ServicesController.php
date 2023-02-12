@@ -201,10 +201,11 @@ class ServicesController extends Controller
         }
     }
 
-    public function services_by_categories_statistics($cat_id)
+    public function services_by_categories_statistics($cat_id,$time)
     {
+        $services_by_categories_statistics = $this->serviceRepository->services_by_categories_statistics($cat_id,$time);
+
         try {
-            $services_by_categories_statistics = $this->serviceRepository->services_by_categories_statistics($cat_id);
             if (isset($services_by_categories_statistics) && count($services_by_categories_statistics) > 0)
                 return response()->json(['status' => 'success', 'data' => $services_by_categories_statistics]);
             else
