@@ -21,7 +21,8 @@ class CategoriesController extends Controller
 
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
-        $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
+        $lang = $request->header('lang') ?? 'ar';
+        app()->setLocale($lang);
         try {
             $categories = $this->categoryRepository->index();
             if (isset($categories) && count($categories) > 0) {
@@ -31,7 +32,7 @@ class CategoriesController extends Controller
                 ]);
             } else {
                 return response()->json([
-                    'status' => 'success','data' => [],
+                    'status' => 'success', 'data' => [],
                     'message' => 'Not Categories Found',
                 ]);
             }
@@ -44,10 +45,10 @@ class CategoriesController extends Controller
     }
 
 
-
-    public function show(Request $request,$category_id): \Illuminate\Http\JsonResponse
+    public function show(Request $request, $category_id): \Illuminate\Http\JsonResponse
     {
-        $lang=$request->header('lang') ?? 'ar' ; app()->setLocale($lang);
+        $lang = $request->header('lang') ?? 'ar';
+        app()->setLocale($lang);
         try {
             $category = $this->categoryRepository->show($category_id);
             if (isset($category)) {
@@ -69,12 +70,6 @@ class CategoriesController extends Controller
             ], 400);
         }
     }
-
-
-
-
-
-
 
 
 }

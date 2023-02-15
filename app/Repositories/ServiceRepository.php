@@ -80,14 +80,14 @@ class ServiceRepository extends BaseRepository
     {
         if ($time == 'today')
             $time = Carbon::today();
-        elseif($time == 'week')
+        elseif ($time == 'week')
             $time = Carbon::now()->subdays(7);
-        elseif($time == 'month')
+        elseif ($time == 'month')
             $time = Carbon::now()->subdays(30);
         else
-            $time = Carbon::createFromFormat('Y-m-d',$time);
-        return  DB::table('orders')
-            ->where('orders.created_at', '>=',$time)
+            $time = Carbon::createFromFormat('Y-m-d', $time);
+        return DB::table('orders')
+            ->where('orders.created_at', '>=', $time)
             ->leftJoin('categories', 'orders.category_id', '=', 'categories.id')
             ->selectRaw('COUNT(orders.id) AS orders_numbers, SUM(orders.total) as orders_amounts')
             ->addSelect('categories.id')
@@ -98,24 +98,24 @@ class ServiceRepository extends BaseRepository
 
     }
 
-    public function services_by_categories_statistics($cat_id,$time)
+    public function services_by_categories_statistics($cat_id, $time)
     {
         if ($time == 'today')
             $time = Carbon::today();
-        elseif($time == 'week')
+        elseif ($time == 'week')
             $time = Carbon::now()->subdays(7);
-        elseif($time == 'month')
+        elseif ($time == 'month')
             $time = Carbon::now()->subdays(30);
         else
-            $time = Carbon::createFromFormat('Y-m-d',$time);
+            $time = Carbon::createFromFormat('Y-m-d', $time);
         return DB::table('orders')
-            ->where('orders.created_at', '>=',$time)
+            ->where('orders.created_at', '>=', $time)
             ->leftJoin('services', 'orders.service_id', '=', 'services.id')
             ->leftJoin('categories', 'services.category_id', '=', 'categories.id')
             ->selectRaw('COUNT(orders.id) AS orders_numbers, SUM(orders.total) as orders_amounts')
             ->addSelect('services.id')
             ->addSelect('services.name_ar')
-            ->where('services.category_id',$cat_id)
+            ->where('services.category_id', $cat_id)
             ->groupBy('services.id')
             ->groupBy('services.name_ar')
             ->get();

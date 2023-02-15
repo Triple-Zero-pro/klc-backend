@@ -19,15 +19,15 @@ class ServiceAttributeRepository extends BaseRepository
 
     public function index($service_id)
     {
-        return $this->model->where('service_id',$service_id)->get();
+        return $this->model->where('service_id', $service_id)->get();
     }
 
 
     public function store_serviceAttribute($data_request)
     {
-        $service_attributes =  $this->model->where('service_id',$data_request['service_id'])->first();
+        $service_attributes = $this->model->where('service_id', $data_request['service_id'])->first();
         if ($service_attributes)
-             return $service_attributes->update($data_request);
+            return $service_attributes->update($data_request);
 
         return ServiceAttribute::create($data_request);
 
@@ -35,12 +35,10 @@ class ServiceAttributeRepository extends BaseRepository
     }
 
 
-
     function model(): string
     {
         return "App\Models\ServiceAttribute";
     }
-
 
 
 }

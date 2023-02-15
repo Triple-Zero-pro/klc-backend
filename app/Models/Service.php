@@ -13,16 +13,17 @@ class Service extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['category_id', 'image', 'name_en', 'description_en', 'terms_conditions_en','name_ar', 'description_ar', 'terms_conditions_ar', 'price', 'status'];
+    protected $fillable = ['category_id', 'image', 'name_en', 'description_en', 'terms_conditions_en', 'name_ar', 'description_ar', 'terms_conditions_ar', 'price', 'status'];
 
     public static function Booted()
     {
-        if(Auth::guard('api')->check()){
+        if (Auth::guard('api')->check()) {
             static::addGlobalScope('query_data_service', function (Builder $builder) {
-                $builder->select(['id','name_'.app()->getLocale() .' as name','description_'.app()->getLocale() .' as description','terms_conditions_'.app()->getLocale() .' as terms_conditions' ,'image','category_id','price','status']);
+                $builder->select(['id', 'name_' . app()->getLocale() . ' as name', 'description_' . app()->getLocale() . ' as description', 'terms_conditions_' . app()->getLocale() . ' as terms_conditions', 'image', 'category_id', 'price', 'status'])->with('serviceAttributes');
             });
         }
     }
+
     public function getImageUrlAttribute()
     {
         if (!$this->image) {
@@ -38,6 +39,7 @@ class Service extends Model
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
+
     public function serviceAttributes()
     {
         return $this->hasMany(ServiceAttribute::class, 'service_id', 'id');

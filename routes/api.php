@@ -84,7 +84,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('orders/confirmPay/{order_id}', [OrdersController::class, 'confirmPay']);
 
 
-
     //////////////////////////// OnboardsController ///////////////////////////////
     Route::post('about-us', [OnboardsController::class, 'about_us_update']);
 
@@ -137,7 +136,6 @@ Route::group(['middleware' => 'auth:admins', 'prefix' => 'admin/dashboard', 'as'
     Route::post('user/cancel-order/{order_id}', [AuthController::class, 'cancel_order']);
     Route::post('orders/update-status/{order_id}', [DashOrdersController::class, 'update_status']);
     Route::post('orders/assign_order_to_driver/{order_id}', [DashOrdersController::class, 'assign_order_to_driver']);
-
 
 
     //////////////////////////// OnboardsController ///////////////////////////////
