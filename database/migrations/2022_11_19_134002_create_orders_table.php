@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('service_id')->nullable()->constrained('services')->nullOnDelete();
-            $table->text('from');
-            $table->text('to');
-            $table->date('appointment_date');
-            $table->time('appointment_time');
+            $table->text('from')->nullable();
+            $table->text('to')->nullable();
+            $table->date('appointment_date')->nullable();
+            $table->time('appointment_time')->nullable();
             $table->string('image_front')->nullable();
             $table->string('image_back')->nullable();
             $table->string('image_ticket')->nullable();
