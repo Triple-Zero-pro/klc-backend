@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 
-use App\Models\Category;
 use App\Models\Service;
-use App\Models\ServiceAttribute;
 use App\Repositories\ServiceAttributeRepository as ServiceAttributeRepository;
 use Exception;
 use Illuminate\Http\Request;

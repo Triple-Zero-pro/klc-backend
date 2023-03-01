@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\PayController as PayController;
 use App\Models\NotificationData;
 use App\Models\Order;
 use App\Models\User;
@@ -11,11 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
-use Symfony\Component\HttpFoundation\Response;
-use Vector\LaravelMultiSmsMethods\Facade\Sms;
-use App\Http\Controllers\PayController as PayController;
 
 class AuthController extends Controller
 {
@@ -95,7 +92,7 @@ class AuthController extends Controller
             'name' => $request->name,
             //'email' => $request->email,
             'phone' => $request->phone,
-            'fcm_token'=> $request->fcm_token,
+            'fcm_token' => $request->fcm_token,
             'password' => Hash::make($request->password),
         ]);
 
@@ -391,6 +388,7 @@ class AuthController extends Controller
             ], 400);
         }
     }
+
     public function update_balance(Request $request)
     {
 
@@ -439,11 +437,12 @@ class AuthController extends Controller
         }
 
     }
-    public  function notifications(): \Illuminate\Http\JsonResponse
+
+    public function notifications(): \Illuminate\Http\JsonResponse
     {
         $user = Auth::user();
-        $notifications = NotificationData::where('receiver_token',$user->fcm_token)->get();
-        return response()->json(['data' => $notifications , 'status' => 'success']);
+        $notifications = NotificationData::where('receiver_token', $user->fcm_token)->get();
+        return response()->json(['data' => $notifications, 'status' => 'success']);
     }
 
 

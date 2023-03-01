@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Category;
-use App\Models\Service;
 use App\Repositories\ServiceRepository as ServiceRepository;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class ServicesController extends Controller
 {
