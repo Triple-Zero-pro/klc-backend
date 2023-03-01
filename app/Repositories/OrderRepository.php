@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 
+use App\Models\OrderServiceForm;
 use App\Models\Payment;
 use App\Models\Service;
 use Prettus\Repository\Eloquent\BaseRepository;
@@ -37,7 +38,10 @@ class OrderRepository extends BaseRepository
         $order =  $this->model->create($data_request);
         $order->category_id = $category_service['category_id'];
         $order->save();
-        $payment = new Payment();
+        $OrderServiceForm = new OrderServiceForm();
+        $OrderServiceForm = $OrderServiceForm->create($data_request);
+        $OrderServiceForm->order_id= $order->id;
+        $OrderServiceForm->save();
         $payment = new Payment();
         $payment->order_id = $order->id;
         $payment->amount = $order->total;

@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::table('order_service_form', function (Blueprint $table) {
             //
-            $table->boolean('going_date')->default(0);
-            $table->boolean('going_time')->default(0);
-            $table->boolean('return_date')->default(0);
-            $table->boolean('return_time')->default(0);
-            $table->boolean('birth_date')->default(0);
+            $table->string('going_date')->default(0);
+            $table->string('going_time')->default(0);
+            $table->string('return_date')->default(0);
+            $table->string('return_time')->default(0);
+            $table->string('birth_date')->default(0);
         });
     }
 
