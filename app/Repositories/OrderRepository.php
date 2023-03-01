@@ -22,7 +22,7 @@ class OrderRepository extends BaseRepository
 
     public function index()
     {
-        return $this->model->with(['user','service','airport'])->paginate(15);
+        return $this->model->with(['user','service','airport','order_service_form'])->paginate(15);
     }
 
     public function show($order_id)

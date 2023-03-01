@@ -38,5 +38,9 @@ class Order extends Model
     {
         return $this->hasOne(Driver::class);
     }
+    public function order_service_form(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(OrderServiceForm::class);
+    }
 
 }
