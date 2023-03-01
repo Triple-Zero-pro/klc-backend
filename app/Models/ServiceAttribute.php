@@ -11,8 +11,10 @@ class ServiceAttribute extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['service_id', 'from', 'to', 'appointment_date','appointment_time', 'images', 'gender','embassy',
-        'select_service', 'employee_status'];
+    protected $fillable = ['order_id', 'from', 'to', 'appointment_date','appointment_time', 'image_front', 'image_back','image_ticket',
+        'image_passport', 'image_visa', 'image_office', 'gender','embassy', 'select_service', 'employee_status','contact_details',
+        'nationality', 'type_ticket', 'employee_name', 'number_passport','country_passport', 'phone_number', '','',
+        ];
     public function service()
     {
         return $this->belongsTo(Service::class)->withDefault([

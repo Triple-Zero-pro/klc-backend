@@ -31,13 +31,6 @@ class OrdersController extends Controller
 
         $validator = Validator::make($request->all(), [
             'service_id' => 'required|numeric',
-            'from' => 'required|min:4',
-            'to' => 'required|min:4',
-            'appointment_date' => 'required|date',
-            'appointment_time' => 'required',
-            'image_front' => 'required',
-            'image_back' => 'required',
-            'image_ticket' => 'required',
             'image_passport' => 'required',
             'payment_method' => 'required',
             'payment_status' => 'required',
@@ -53,6 +46,8 @@ class OrdersController extends Controller
         $data_request['image_back'] = $this->uploadImage($request, 'image_back');
         $data_request['image_ticket'] = $this->uploadImage($request, 'image_ticket');
         $data_request['image_passport'] = $this->uploadImage($request, 'image_passport');
+        $data_request['image_visa'] = $this->uploadImage($request, 'image_visa');
+        $data_request['image_office'] = $this->uploadImage($request, 'image_office');
         $data_request['user_id'] = Auth::user()->id;
         try {
             $total_amount = $request->total;

@@ -38,6 +38,7 @@ class OrderRepository extends BaseRepository
         $order->category_id = $category_service['category_id'];
         $order->save();
         $payment = new Payment();
+        $payment = new Payment();
         $payment->order_id = $order->id;
         $payment->amount = $order->total;
         $payment->currency = 'KWD';
