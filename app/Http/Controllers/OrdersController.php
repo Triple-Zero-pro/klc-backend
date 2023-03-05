@@ -33,7 +33,6 @@ class OrdersController extends Controller
             'payment_method' => 'required',
             'payment_status' => 'required',
             'total' => 'required',
-            'airport_id' => 'required',
             'status' => 'required|in:pending,processing,delivering,completed,cancelled,refunded',
         ]);
         if ($validator->fails())
@@ -70,7 +69,6 @@ class OrdersController extends Controller
             'payment_method' => 'required',
             'payment_status' => 'required',
             'total' => 'required',
-            'airport_id' => 'required',
             'status' => 'required|in:pending,processing,delivering,completed,cancelled,refunded',
         ]);
         if ($validator->fails())
