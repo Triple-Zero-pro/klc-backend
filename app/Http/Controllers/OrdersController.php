@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 
-use App\Models\Category;
+use App\Http\Controllers\PayController as PayController;
 use App\Models\NotificationData;
 use App\Models\Order;
 use App\Models\Payment;
@@ -13,7 +13,6 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\PayController as PayController;
 
 class OrdersController extends Controller
 {
@@ -31,7 +30,6 @@ class OrdersController extends Controller
 
         $validator = Validator::make($request->all(), [
             'service_id' => 'required|numeric',
-            'image_passport' => 'required',
             'payment_method' => 'required',
             'payment_status' => 'required',
             'total' => 'required',
@@ -41,7 +39,7 @@ class OrdersController extends Controller
         if ($validator->fails())
             return response()->json(['status' => 'success', 'message' => 'Error Validation', 'errors' => $validator->errors()]);
 
-        $data_request = $request->except(['image_front', 'image_back', 'image_ticket', 'image_passport']);
+        $data_request = $request->except(['image_front', 'image_back', 'image_ticket', 'image_passport', 'image_visa', 'image_office']);
         $data_request['image_front'] = $this->uploadImage($request, 'image_front');
         $data_request['image_back'] = $this->uploadImage($request, 'image_back');
         $data_request['image_ticket'] = $this->uploadImage($request, 'image_ticket');
@@ -81,11 +79,13 @@ class OrdersController extends Controller
         if (Auth::user()->balance < $request->total)
             return response()->json(['status' => 'success', 'message' => 'Wallet Balance Not Enough']);
 
-        $data_request = $request->except(['image_front', 'image_back', 'image_ticket', 'image_passport']);
+        $data_request = $request->except(['image_front', 'image_back', 'image_ticket', 'image_passport', 'image_visa', 'image_office']);
         $data_request['image_front'] = $this->uploadImage($request, 'image_front');
         $data_request['image_back'] = $this->uploadImage($request, 'image_back');
         $data_request['image_ticket'] = $this->uploadImage($request, 'image_ticket');
         $data_request['image_passport'] = $this->uploadImage($request, 'image_passport');
+        $data_request['image_visa'] = $this->uploadImage($request, 'image_visa');
+        $data_request['image_office'] = $this->uploadImage($request, 'image_office');
         $data_request['user_id'] = Auth::user()->id;
         $order = $this->orderRepository->store_order($data_request);
         try {
