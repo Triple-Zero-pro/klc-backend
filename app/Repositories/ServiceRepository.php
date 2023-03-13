@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 use App\Models\Category;
+use App\Models\ServiceAttribute;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -40,8 +41,11 @@ class ServiceRepository extends BaseRepository
 
     public function store_service($data_request)
     {
-        return $this->model->create($data_request);
-
+        $service  =  $this->model->create($data_request);
+        $service_attributes =  ServiceAttribute::create([
+            'service_id' => $service->id,
+        ]);
+        return $service;
     }
 
 
