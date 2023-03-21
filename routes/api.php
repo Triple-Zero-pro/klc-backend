@@ -20,6 +20,7 @@ use App\Http\Controllers\Dashboard\ServicesController as DashServicesController;
 use App\Http\Controllers\Dashboard\OnboardsController as DashOnboardsController;
 use App\Http\Controllers\Dashboard\OrdersController as DashOrdersController;
 use App\Http\Controllers\Dashboard\DriverController as DashDriverController;
+use App\Http\Controllers\Dashboard\QuestionsController as DashQuestionsController;
 use App\Http\Controllers\Dashboard\HomeController;
 use App\Http\Controllers\Dashboard\ServiceAttributesController as DashServiceAttributesController;
 use App\Http\Controllers\Driver\AuthController as DriverAuthController;
@@ -59,6 +60,10 @@ Route::controller(AuthController::class)->group(function () {
 Route::group(['middleware' => 'auth:api'], function () {
     //////////////////////////// category ///////////////////////////////
     Route::resource('categories', CategoriesController::class)->except(['store', 'update', 'destroy']);
+
+
+    //////////////////////////// questions ///////////////////////////////
+    Route::resource('questions', DashQuestionsController::class)->except(['store', 'update', 'destroy']);
 
 
     //////////////////////////// service ///////////////////////////////
@@ -113,6 +118,11 @@ Route::group(['middleware' => 'auth:admins', 'prefix' => 'admin/dashboard', 'as'
     //////////////////////////// categories ///////////////////////////////
     Route::resource('categories', DashCategoriesController::class);
     Route::post('categories/{id}', [DashCategoriesController::class, 'update']);
+
+
+    //////////////////////////// Question ///////////////////////////////
+    Route::resource('questions', DashQuestionsController::class);
+    Route::post('questions/{id}', [DashQuestionsController::class, 'update']);
 
 
     //////////////////////////// service ///////////////////////////////
