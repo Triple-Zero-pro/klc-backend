@@ -140,8 +140,9 @@ class ClientsController extends Controller
 
         try {
             $client = $this->clientRepository->client_active($client_id);
+            $client_check = $this->clientRepository->client_active($client_id);
             if ($client)
-                return response()->json(['status' => 'success', 'message' => 'Client Active Successfully', 'data' => $client]);
+                return response()->json(['status' => 'success', 'message' => 'Client Active Successfully', 'data' => $client_check]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',

@@ -24,6 +24,16 @@ class DriverController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Again'], 400);
         }
     }
+    public function all()
+    {
+        try {
+            $drivers = Driver::all();
+            if ($drivers)
+                return response()->json(['status' => 'success', 'message' => 'Drivers', 'data' => $drivers]);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Something wrong Please Try Again'], 400);
+        }
+    }
 
     public function register(Request $request)
     {
@@ -100,6 +110,7 @@ class DriverController extends Controller
 
     public function update_status(Request $request,$driver_id)
     {
+        $driver_data =  Driver::find($driver_id);
         $validator = Validator::make($request->all(), [
             'status' => 'required|in:active,inactive',
         ]);
@@ -112,7 +123,7 @@ class DriverController extends Controller
                 'status' => $request->status
             ]);
             if ($driver)
-                return response()->json(['status' => 'success', 'message' => 'Driver Status Updated Successfully', 'data' => $driver]);
+                return response()->json(['status' => 'success', 'message' => 'Driver Status Updated Successfully', 'data' => $driver_data]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',

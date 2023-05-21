@@ -176,6 +176,7 @@ Route::group(['middleware' => 'auth:admins', 'prefix' => 'admin/dashboard', 'as'
 
     /////////////////////////// Drivers /////////////////////////////////
     Route::get('drivers', [DashDriverController::class, 'drivers']);
+    Route::get('alldrivers', [DashDriverController::class, 'all']);
     Route::post('driver/register', [DashDriverController::class, 'register']);
     Route::get('driver/profile/{driver_id}', [DashDriverController::class, 'profile']);
     Route::post('driver/profile/{driver_id}', [DashDriverController::class, 'update']);
